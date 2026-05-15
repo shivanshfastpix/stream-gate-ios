@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct RecordButton : View {
-    let onTap:() -> Void;
+    let onTap:() -> Void
     var body: some View {
         Button {
             onTap()
