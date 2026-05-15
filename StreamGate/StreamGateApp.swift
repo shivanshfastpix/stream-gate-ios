@@ -1,9 +1,3 @@
-//
-//  StreamGateApp.swift
-//  StreamGate
-//
-//  Created by Shivansh Chouhan on 13/05/26.
-//
 
 import SwiftUI
 
