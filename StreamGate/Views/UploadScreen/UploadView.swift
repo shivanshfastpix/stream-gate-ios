@@ -5,66 +5,86 @@ struct UploadView: View {
 
 //    @StateObject private var vm = UploadViewModel()
 
-    @State private var selectedItem: PhotosPickerItem?
+//    @State private var selectedItem: PhotosPickerItem?
 
     var body: some View {
+        
+        NavigationStack{
+            ZStack {
 
-        ZStack {
+                Color.black
+                    .ignoresSafeArea()
 
-            Color.black
-                .ignoresSafeArea()
+                ScrollView(showsIndicators: false) {
 
-            ScrollView(showsIndicators: false) {
+                    VStack(spacing: 24) {
 
-                VStack(spacing: 24) {
+                        HeaderSection()
 
-                    HeaderSection()
+    //                    uploadSection
+                        
+                        UploadDropZone()
+                        {
+                            print("uploading the video.....")
+                            Task {
 
-//                    uploadSection
-                    
-                    UploadDropZone()
-                    {
-                        print("uploading the video.....")
+                                    do {
+
+                                        try await StreamGateServices()
+                                            .sendUploadRequest()
+
+                                    } catch {
+
+                                        print(error)
+                                    }
+                                }
+                        }
+
+                        SeparatorSection()
+
+                        NavigationLink {
+                            RecordView()
+                        } label:{
+
+                            RecordButton()
+
+                        }
+                       
+
+    //                    stateSection
                     }
-
-                    SeparatorSection()
-
-                    RecordButton {
-
-                        print("Start recording")
-                    }
-
-//                    stateSection
+                    .padding(.horizontal, 24)
+                    .padding(.vertical, 40)
+                    .frame(maxWidth: 500)
+                    .frame(maxWidth: .infinity)
                 }
-                .padding(.horizontal, 24)
-                .padding(.vertical, 40)
-                .frame(maxWidth: 500)
-                .frame(maxWidth: .infinity)
             }
+    //        .onChange(of: selectedItem) {
+    //
+    //            Task {
+    //
+    //                guard let item = selectedItem else {
+    //                    return
+    //                }
+    //
+    //                do {
+    //
+    ////                    let url = try await loadVideoURL(
+    ////                        from: item
+    ////                    )
+    ////
+    ////                    await vm.uploadVideo(
+    ////                        fileURL: url
+    ////                    )
+    ////                } catch {
+    ////
+    ////                    print(error)
+    //                }
+    //            }
+            }
+            
         }
-//        .onChange(of: selectedItem) {
-//
-//            Task {
-//
-//                guard let item = selectedItem else {
-//                    return
-//                }
-//
-//                do {
-//
-////                    let url = try await loadVideoURL(
-////                        from: item
-////                    )
-////
-////                    await vm.uploadVideo(
-////                        fileURL: url
-////                    )
-////                } catch {
-////
-////                    print(error)
-//                }
-//            }
-        }
+       
     }
 //}
 
@@ -155,3 +175,7 @@ struct UploadView: View {
 //        return temporaryURL
 //    }
 //}
+
+#Preview {
+    UploadView()
+}

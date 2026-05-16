@@ -1,11 +1,9 @@
 import SwiftUI
 
 struct RecordButton : View {
-    let onTap:() -> Void
+//    let onTap:() -> Void
     var body: some View {
-        Button {
-            onTap()
-        } label: {
+       
             HStack(spacing: 16) {
                 Circle()
                     .fill(Color.red)
@@ -26,8 +24,6 @@ struct RecordButton : View {
                     }
                     
             }
-        }
-        .buttonStyle(.plain)
-        .padding(.bottom, 40)
+        
     }
 }

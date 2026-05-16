@@ -15,10 +15,10 @@ struct RecordScreenSection:View{
                                     .font(.system(size: 22, weight: .bold))
                             }
                             .foregroundColor(.white)
-                            .frame(maxWidth: .infinity)
-                            .frame(height: 110)
+                            .frame(maxWidth: 300)
+                            .frame(height: 70)
                             .background(
-                                RoundedRectangle(cornerRadius: 28)
+                                RoundedRectangle(cornerRadius: 22)
                                     .fill(Color.orange)
                             )
                         }
@@ -27,5 +27,5 @@ struct RecordScreenSection:View{
 }
 
 #Preview {
-    RecordCameraSection()
+    RecordScreenSection()
 }

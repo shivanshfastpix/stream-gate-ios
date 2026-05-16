@@ -15,14 +15,14 @@ struct RecordCameraSection:View {
                                             .font(.system(size: 22, weight: .bold))
                                     }
                                     .foregroundColor(.white)
-                                    .frame(maxWidth: .infinity)
-                                    .frame(height: 110)
+                                    .frame(maxWidth: 300)
+                                    .frame(height: 70)
                                     .background(
-                                        RoundedRectangle(cornerRadius: 28)
-                                            .fill(Color(.systemGray6).opacity(0.12))
+                                        RoundedRectangle(cornerRadius: 22)
+                                            .fill(Color(.black).opacity(0.12))
                                     )
                                     .overlay(
-                                        RoundedRectangle(cornerRadius: 28)
+                                        RoundedRectangle(cornerRadius: 22)
                                             .stroke(Color.white.opacity(0.15), lineWidth: 1.5)
                                     )
                                 }
@@ -33,6 +33,6 @@ struct RecordCameraSection:View {
 
 
 #Preview{
-    RecordScreenSection()
+    RecordCameraSection()
 }
 
