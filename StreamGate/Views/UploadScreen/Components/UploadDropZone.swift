@@ -2,7 +2,7 @@ import SwiftUI
 
 struct UploadDropZone: View {
 
-    let onTap: () -> Void
+//    let onTap: () -> Void
 
     var body: some View {
 
@@ -43,9 +43,9 @@ struct UploadDropZone: View {
                 )
         }
         .contentShape(Rectangle())
-        .onTapGesture {
-            onTap()
-        }
+//        .onTapGesture {
+////            onTap()
+//        }
     }
 }
 
@@ -56,9 +56,7 @@ struct UploadDropZone: View {
         Color.black
             .ignoresSafeArea()
 
-        UploadDropZone {
-
-        }
+        UploadDropZone()
         .padding()
     }
 }

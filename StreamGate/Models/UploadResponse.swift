@@ -1,17 +1,19 @@
 
-import Foundation
-
-//struct UploadResponse: Codable {
-//    let success: Bool
-//    let data: UploadData
-//}
+//import Foundation
 //
-//struct UploadData: Codable {
-//    let id: String
+//struct UploadResponse : Codable{
+//    let uploadId: String
 //    let url: String
 //}
 
-struct UploadResponse : Codable{
+import Foundation
+
+struct CreateDirectUploadResponse: Decodable {
+    let success: Bool
+    let data: UploadData
+}
+
+struct UploadData: Decodable {
     let uploadId: String
     let url: String
 }

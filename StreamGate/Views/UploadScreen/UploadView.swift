@@ -1,181 +1,165 @@
 import SwiftUI
 import PhotosUI
+import AVKit
 
+@available(iOS 16.0, *)
 struct UploadView: View {
 
-//    @StateObject private var vm = UploadViewModel()
+    @StateObject private var vm = UploadViewModel()
 
-//    @State private var selectedItem: PhotosPickerItem?
+    @State private var selectedItem: PhotosPickerItem?
+    @State private var player = AVPlayer()
+    @State private var selectedVideoURL: URL?
 
     var body: some View {
-        
-        NavigationStack{
-            ZStack {
 
-                Color.black
-                    .ignoresSafeArea()
-
-                ScrollView(showsIndicators: false) {
-
-                    VStack(spacing: 24) {
-
-                        HeaderSection()
-
-    //                    uploadSection
+        if #available(iOS 17.0, *) {
+            NavigationStack {
+                
+                ZStack {
+                    
+                    Color.black
+                        .ignoresSafeArea()
+                    
+                    ScrollView(showsIndicators: false) {
                         
-                        UploadDropZone()
-                        {
-                            print("uploading the video.....")
-                            Task {
-
-                                    do {
-
-                                        try await StreamGateServices()
-                                            .sendUploadRequest()
-
-                                    } catch {
-
-                                        print(error)
-                                    }
+                        VStack(spacing: 24) {
+                            
+                            HeaderSection()
+                            
+                            // Video Picker
+                            
+                        if(selectedVideoURL == nil)
+                            {
+                            PhotosPicker(
+                                selection: $selectedItem,
+                                matching: .videos
+                            ) {
+                                
+                                UploadDropZone()
+                            }
+                        }
+                            
+                            if selectedVideoURL != nil {
+                                
+                                VideoPlayer(player: player)
+                                    .frame(height: 300)
+                                    .clipShape(
+                                        RoundedRectangle(cornerRadius: 24)
+                                    )
+                            }
+                            
+                            // Upload Progress
+                            
+                            if vm.isUploading {
+                                
+                                VStack(spacing: 12) {
+                                    
+                                    ProgressView(
+                                        value: vm.uploadProgress
+                                    )
+                                    .tint(.orange)
+                                    
+                                    Text(
+                                        "\(Int(vm.uploadProgress * 100))%"
+                                    )
+                                    .foregroundStyle(.white)
                                 }
+                                .padding(.horizontal)
+                            }
+                            
+                            // Upload Success
+                            
+                            if vm.uploadCompleted {
+                                
+                                Text("Upload Completed")
+                                    .foregroundStyle(.green)
+                                    .fontWeight(.semibold)
+                            }
+                            
+                            if let error = vm.uploadError {
+
+                                VStack(spacing: 12) {
+
+                                    Image(systemName: "exclamationmark.triangle.fill")
+                                        .foregroundStyle(.red)
+                                        .font(.title2)
+
+                                    Text(error)
+                                        .foregroundStyle(.red)
+                                        .multilineTextAlignment(.center)
+                                }
+                                .padding()
+                            }
+                            
+                            SeparatorSection()
+                            
+                            NavigationLink {
+                                
+                                RecordView()
+                                
+                            } label: {
+                                
+                                RecordButton()
+                            }
                         }
-
-                        SeparatorSection()
-
-                        NavigationLink {
-                            RecordView()
-                        } label:{
-
-                            RecordButton()
-
-                        }
-                       
-
-    //                    stateSection
+                        .padding(.horizontal, 24)
+                        .padding(.vertical, 40)
+                        .frame(maxWidth: 500)
+                        .frame(maxWidth: .infinity)
                     }
-                    .padding(.horizontal, 24)
-                    .padding(.vertical, 40)
-                    .frame(maxWidth: 500)
-                    .frame(maxWidth: .infinity)
                 }
             }
-    //        .onChange(of: selectedItem) {
-    //
-    //            Task {
-    //
-    //                guard let item = selectedItem else {
-    //                    return
-    //                }
-    //
-    //                do {
-    //
-    ////                    let url = try await loadVideoURL(
-    ////                        from: item
-    ////                    )
-    ////
-    ////                    await vm.uploadVideo(
-    ////                        fileURL: url
-    ////                    )
-    ////                } catch {
-    ////
-    ////                    print(error)
-    //                }
-    //            }
+            .onChange(of: selectedItem) {
+                
+                Task {
+                    
+                    guard let item = selectedItem else {
+                        return
+                    }
+                    
+                    do {
+                        
+                        if let movie = try await item.loadTransferable(
+                            type: CustomMovieFile.self
+                        ) {
+                            
+                            // Store Selected Video URL
+                            
+                            selectedVideoURL = movie.url
+//                            print("video url is  : \(movie.url)")
+                            
+                            // Create Player Item
+                            
+                            let playerItem = AVPlayerItem(
+                                url: movie.url
+                            )
+                            
+                            // Load Into Video Player
+                            
+                            player.replaceCurrentItem(
+                                with: playerItem
+                            )
+                            
+                            // Auto Play
+                            
+                            player.play()
+                            
+                            // Start Upload
+                            
+                            await vm.uploadVideo(
+                                fileURL: movie.url
+                            )
+                        }
+                        
+                    } catch {
+                        
+                        print(error.localizedDescription)
+                    }
+                }
             }
-            
+        } else {
+            // Fallback on earlier versions
         }
-       
     }
-//}
-
-//private extension UploadView {
-//
-//    var uploadSection: some View {
-//
-//        PhotosPicker(
-//            selection: $selectedItem,
-//            matching: .videos
-//        ) {
-//
-//            UploadDropZone {
-//
-//            }
-//        }
-//    }
-//
-//    @ViewBuilder
-//    var stateSection: some View {
-//
-//        switch vm.uploadState {
-//
-//        case .idle:
-//
-//            EmptyView()
-//
-//        case .uploading(let progress):
-//
-//            UploadProgressView(
-//                progress: progress
-//            )
-//
-//        case .processing:
-//
-//            VStack(spacing: 16) {
-//
-//                ProgressView()
-//
-//                Text("Processing video...")
-//                    .foregroundStyle(.white)
-//            }
-//
-//        case .completed(let playbackURL):
-//
-//            VideoPreviewCard(
-//                playbackURL: playbackURL
-//            )
-//
-//        case .failed(let message):
-//
-//            Text(message)
-//                .foregroundStyle(.red)
-//
-//        case .selecting:
-//
-//            Text("Selecting video...")
-//                .foregroundStyle(.white)
-//        }
-//    }
-//}
-//
-//private extension UploadView {
-//
-//    func loadVideoURL(
-//        from item: PhotosPickerItem
-//    ) async throws -> URL {
-//
-//        let temporaryDirectory =
-//            FileManager.default.temporaryDirectory
-//
-//        let temporaryURL =
-//            temporaryDirectory
-//            .appendingPathComponent(
-//                UUID().uuidString + ".mov"
-//            )
-//
-//        guard let videoData =
-//                try await item.loadTransferable(
-//                    type: Data.self
-//                ) else {
-//
-//            throw URLError(.badURL)
-//        }
-//
-//        try videoData.write(to: temporaryURL)
-//
-//        return temporaryURL
-//    }
-//}
-
-#Preview {
-    UploadView()
 }

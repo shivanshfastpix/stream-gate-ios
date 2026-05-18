@@ -1,19 +1,14 @@
-//
-//  ContentView.swift
-//  StreamGate
-//
-//  Created by Shivansh Chouhan on 13/05/26.
-//
-
-//# StreamGate Upload Screen — SwiftUI
-
 
 import SwiftUI
 
 struct ContentView: View {
     
     var body: some View {
-        UploadView()
+        if #available(iOS 16.0, *) {
+            UploadView()
+        } else {
+            // Fallback on earlier versions
+        }
     }
 }
 

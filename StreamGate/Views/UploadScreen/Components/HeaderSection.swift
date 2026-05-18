@@ -1,9 +1,3 @@
-//
-//  HeaderSection.swift
-//  StreamGate
-//
-//  Created by Shivansh Chouhan on 14/05/26.
-//
 
 import SwiftUI
 
