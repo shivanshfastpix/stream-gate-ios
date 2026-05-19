@@ -1,46 +1,61 @@
 import SwiftUI
 
-struct RecordView: View{
-    var body:some View{
+struct RecordView: View {
+    
+    @State private var showCamera = false
+    @State private var navigateToPreview = false
+    @State private var recordedVideoURL: URL?
+    
+    var body: some View {
         
         if #available(iOS 16.0, *) {
-            NavigationStack{
+            
+            NavigationStack {
                 
-                ZStack{
+                ZStack {
                     
-                    Color.black.ignoresSafeArea()
-                    ScrollView(showsIndicators: false)
-                    {
-                        VStack(spacing: 60){
-                            // Header section
-                            HeaderRecordSection()
-                            
-                            VStack(spacing: 25){
-                                // Record screen
-                                RecordCameraSection()
-                                
-                                // Record Camera
-                                RecordScreenSection()
-                                
-                            }
-                            
-                            
+                    Color.black
+                        .ignoresSafeArea()
+                    
+                    VStack {
+                        
+                        HeaderRecordSection()
+                        
+                        RecordCameraSection {
+                            showCamera = true
                         }
                         
+                        RecordScreenSection()
                     }
+                }
+                .sheet(isPresented: $showCamera) {
                     
+                    VideoRecorderView { videoURL in
+                        
+                        recordedVideoURL = videoURL
+                        
+                        navigateToPreview = true
+                    }
+                }
+                .navigationDestination(
+                    isPresented: $navigateToPreview
+                ) {
+                    
+                    if let videoURL = recordedVideoURL {
+                        
+                        UploadPreviewView(
+                            videoURL: videoURL
+                        )
+                    }
                 }
             }
+            
         } else {
-            // Fallback on earlier versions
+            
+            Text("iOS 16 Required")
         }
-       
-       
-      
     }
-    
 }
-
 
 #Preview {
     RecordView()

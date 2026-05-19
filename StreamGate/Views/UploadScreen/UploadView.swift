@@ -10,6 +10,7 @@ struct UploadView: View {
     @State private var selectedItem: PhotosPickerItem?
     @State private var player = AVPlayer()
     @State private var selectedVideoURL: URL?
+    
 
     var body: some View {
 
@@ -75,6 +76,38 @@ struct UploadView: View {
                                 Text("Upload Completed")
                                     .foregroundStyle(.green)
                                     .fontWeight(.semibold)
+                            }
+                            
+                            if let sharedURL = vm.sharedURL {
+
+                                VStack(spacing: 16) {
+
+                                    Text("Video Ready")
+                                        .foregroundStyle(.green)
+                                        .fontWeight(.bold)
+
+                                    Text(sharedURL)
+                                        .foregroundStyle(.white)
+                                        .font(.caption)
+                                        .multilineTextAlignment(.center)
+
+                                    HStack {
+
+                                        Button("Copy Link") {
+
+                                            UIPasteboard.general.string = sharedURL
+                                        }
+
+                                        Button("Preview") {
+
+                                            if let url = URL(string: sharedURL) {
+
+                                                UIApplication.shared.open(url)
+                                            }
+                                        }
+                                    }
+                                }
+                                .padding()
                             }
                             
                             if let error = vm.uploadError {

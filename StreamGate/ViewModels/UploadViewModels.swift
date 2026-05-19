@@ -23,6 +23,7 @@ final class UploadViewModel: NSObject,ObservableObject, UploadSDKErrorDelegate  
     @Published var isUploading = false
     @Published var uploadCompleted = false
     @Published var uploadError: String?
+    @Published var sharedURL: String?
     
     
    
@@ -32,6 +33,7 @@ final class UploadViewModel: NSObject,ObservableObject, UploadSDKErrorDelegate  
     private let uploader = Uploads()
 //    private let service = StreamGateServices()
     private let uploadService = UploadService()
+    private var didFetchPlaybackURL = false
     
     override init() {
 
@@ -45,7 +47,7 @@ final class UploadViewModel: NSObject,ObservableObject, UploadSDKErrorDelegate  
         fileURL: URL
     ) async {
         print("uploading the video")
-//        resetState()
+        resetState()
 
         do {
 
@@ -54,48 +56,89 @@ final class UploadViewModel: NSObject,ObservableObject, UploadSDKErrorDelegate  
 
             // getting the url
 //            let response = try await service.sendUploadRequest()
-            let signedUrl = try await uploadService.createDirectUpload()
+//            let signedUrl = try await uploadService.createDirectUpload()
+            guard let (signedUrl, uploadId) = try await uploadService.createDirectUpload() else {
+                return
+            }
+            
             print("response / signed url : \(signedUrl)")
+            print("upload id : \(uploadId)")
 
-            // sdk handler to see the progress
 //            uploader.progressHandler = { [weak self] progress in
-//                print("inside the handler...progress => \(progress)")
-//                DispatchQueue.main.async {
-//
-//                    self?.uploadProgress = Double(progress)
-//
-//                    if progress >= 1.0 {
-//
-//                        self?.isUploading = false
-//                        self?.uploadCompleted = true
+//                
+//                guard let self else { return }
+//                
+//                print("progress => \(progress)")
+//                
+//                Task { @MainActor in
+//                    
+//                     self.uploadProgress = Double(progress)
+//                    
+//                    if progress >= 0.999 {
+//                        
+//                        self.isUploading = false
+//                        self.uploadCompleted = true
 //                    }
 //                }
 //            }
             
             uploader.progressHandler = { [weak self] progress in
                 
+                print("progress -> \(progress)")
                 guard let self else { return }
-                
-                print("progress => \(progress)")
-                
+
                 Task { @MainActor in
-                    
+
                     self.uploadProgress = Double(progress)
-                    
-                    if progress >= 0.999 {
-                        
+
+                    if progress >= 1.0 && !self.didFetchPlaybackURL {
+
+                        self.didFetchPlaybackURL = true
+
                         self.isUploading = false
                         self.uploadCompleted = true
+                        print("upload id is : \(uploadId)")
+                        
+                        
+//                        do{
+//                            try await Task.sleep(nanoseconds: 5_000_000_000)
+                            
+                            await self.pollVideoStatus(
+                                uploadId: uploadId
+                            )
+                            
+//                        }
+                      
+
+                        
+//                        do {
+//                            print("calling inside the handler")
+////                            try await Task.sleep(for: .seconds(3))
+//                            
+//                            try await Task.sleep(nanoseconds: 5_000_000_000)
+//
+//                            let playbackId = try await self.uploadService
+//                                .getSignedURL(videoId: uploadId)
+//                            print("playback id : \(playbackId)")
+//
+//                            self.sharedURL =
+//                            "https://stream.fastpix.io/\(playbackId).m3u8"
+//                            print("https://stream.fastpix.io/\(playbackId).m3u8")
+//
+//                        } catch {
+//
+//                            self.uploadError = error.localizedDescription
+//                        }
                     }
                 }
             }
-            
+
            print("uploading the file in sdk : \(fileURL)")
             // uploading file url to sdk
            uploader.uploadFile(
                 file: fileURL,
                 endpoint: signedUrl.absoluteString,
-                chunkSizeKB: 10
+                chunkSizeKB: 5
             )
 
         } catch {
@@ -104,6 +147,63 @@ final class UploadViewModel: NSObject,ObservableObject, UploadSDKErrorDelegate  
             handleSystemError(error)
         }
     }
+    
+    private func pollVideoStatus(
+        uploadId: String
+    ) async {
+        print("checking for video status for \(uploadId)")
+        do {
+
+            while true {
+
+                let (status, playbackId) =
+                try await self.uploadService
+                    .getResponse(
+                        uploadId: uploadId
+                    )
+                print("upload id : => \(uploadId)")
+                print("status => \(status)")
+
+                switch status.lowercased() {
+
+                case "ready":
+
+                    if let playbackId {
+
+                        self.sharedURL =
+                        "https://stream.fastpix.io/\(playbackId).m3u8"
+
+                        print("video ready")
+                    }
+
+                    return
+
+                case "failed":
+
+                    self.uploadError =
+                    "Video processing failed"
+
+                    return
+
+                default:
+
+                    // waiting / preparing / processing
+                    print("video still processing...")
+                }
+
+                // wait 3 sec before retry
+                try await Task.sleep(
+                    nanoseconds: 3_000_000_000
+                )
+            }
+
+        } catch {
+
+            self.uploadError =
+            error.localizedDescription
+        }
+    }
+    
     
     private func handleSystemError(
             _ error: Error
@@ -171,6 +271,8 @@ final class UploadViewModel: NSObject,ObservableObject, UploadSDKErrorDelegate  
 
     
     func resetState() {
+        
+        didFetchPlaybackURL = false
 
         uploadProgress = 0
 
