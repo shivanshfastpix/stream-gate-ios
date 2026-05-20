@@ -24,6 +24,7 @@ final class UploadViewModel: NSObject,ObservableObject, UploadSDKErrorDelegate  
     @Published var uploadCompleted = false
     @Published var uploadError: String?
     @Published var sharedURL: String?
+    @Published var isProcessingVideo = false
     
     
    
@@ -97,6 +98,7 @@ final class UploadViewModel: NSObject,ObservableObject, UploadSDKErrorDelegate  
 
                         self.isUploading = false
                         self.uploadCompleted = true
+                        self.isProcessingVideo = true
                         print("upload id is : \(uploadId)")
                         
                         
@@ -151,23 +153,29 @@ final class UploadViewModel: NSObject,ObservableObject, UploadSDKErrorDelegate  
     private func pollVideoStatus(
         uploadId: String
     ) async {
+
         print("checking for video status for \(uploadId)")
-        do {
 
-            while true {
+        var attempts = 0
+        let maxAttempts = 30
 
-                let (status, playbackId) =
-                try await self.uploadService
-                    .getResponse(
-                        uploadId: uploadId
-                    )
-                print("upload id : => \(uploadId)")
+        while attempts < maxAttempts {
+
+            attempts += 1
+
+            if let (status, playbackId) =
+                await self.uploadService.getResponse(
+                    uploadId: uploadId
+                ) {
+
+                print("upload id => \(uploadId)")
                 print("status => \(status)")
 
                 switch status.lowercased() {
 
                 case "ready":
-
+                    
+                    self.isProcessingVideo = false
                     if let playbackId {
 
                         self.sharedURL =
@@ -179,7 +187,7 @@ final class UploadViewModel: NSObject,ObservableObject, UploadSDKErrorDelegate  
                     return
 
                 case "failed":
-
+                    self.isProcessingVideo = false
                     self.uploadError =
                     "Video processing failed"
 
@@ -187,21 +195,18 @@ final class UploadViewModel: NSObject,ObservableObject, UploadSDKErrorDelegate  
 
                 default:
 
-                    // waiting / preparing / processing
                     print("video still processing...")
                 }
-
-                // wait 3 sec before retry
-                try await Task.sleep(
-                    nanoseconds: 3_000_000_000
-                )
             }
 
-        } catch {
-
-            self.uploadError =
-            error.localizedDescription
+            // wait before next poll
+            try? await Task.sleep(
+                nanoseconds: 3_000_000_000
+            )
         }
+
+        self.uploadError =
+        "Video processing timeout"
     }
     
     

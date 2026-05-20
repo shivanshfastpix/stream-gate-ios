@@ -38,6 +38,7 @@ struct UploadPreviewView: View {
                         )
                     
                     // Upload Progress
+                
                     
                     if vm.isUploading {
                         
@@ -56,6 +57,8 @@ struct UploadPreviewView: View {
                         .padding(.horizontal)
                     }
                     
+                    
+                    
                     // Upload Success
                     
                     if vm.uploadCompleted {
@@ -69,41 +72,117 @@ struct UploadPreviewView: View {
                         }
                     }
                     
-                    // Shared URL
-                    
-                    if let sharedURL = vm.sharedURL {
-                        
-                        VStack(spacing: 16) {
-                            
-                            if #available(iOS 16.0, *) {
-                                Text("Video Ready")
-                                    .foregroundStyle(.green)
-                                    .fontWeight(.bold)
-                            } else {
-                                // Fallback on earlier versions
-                            }
-                            
-                            Text(sharedURL)
+                    if vm.isProcessingVideo {
+
+                        VStack(spacing: 12) {
+
+                            ProgressView()
+
+                            Text("Processing video...")
                                 .foregroundStyle(.white)
+                        }
+                        .padding()
+                    }
+                    
+                    // Shared URL
+
+                    if let sharedURL = vm.sharedURL {
+
+                        VStack(spacing: 20) {
+
+                            Image(systemName: "checkmark.circle.fill")
+                                .font(.system(size: 60))
+                                .foregroundStyle(.green)
+
+                            Text("Video Ready")
+                                .font(.title3)
+                                .fontWeight(.bold)
+                                .foregroundStyle(.white)
+
+                            Text(sharedURL)
                                 .font(.caption)
+                                .foregroundStyle(.gray)
                                 .multilineTextAlignment(.center)
-                            
-                            HStack {
-                                
-                                Button("Copy Link") {
-                                    UIPasteboard.general.string =
-                                    sharedURL
+                                .padding(.horizontal)
+
+                            HStack(spacing: 16) {
+
+                                // Copy Link Button
+
+                                Button {
+
+                                    UIPasteboard.general.string = sharedURL
+
+                                } label: {
+
+                                    HStack(spacing: 8) {
+
+                                        Image(systemName: "doc.on.doc.fill")
+
+                                        Text("Copy Link")
+                                            .fontWeight(.semibold)
+                                    }
+                                    .frame(maxWidth: .infinity)
+                                    .padding(.vertical, 14)
+                                    .background(Color.orange)
+                                    .foregroundStyle(.white)
+                                    .clipShape(
+                                        RoundedRectangle(cornerRadius: 16)
+                                    )
+                                    .shadow(
+                                        color: .orange.opacity(0.4),
+                                        radius: 8,
+                                        x: 0,
+                                        y: 4
+                                    )
                                 }
-                                
-                                Button("Preview") {
-                                    
+
+                                // Preview Button
+
+                                Button {
+
                                     if let url = URL(string: sharedURL) {
+
                                         UIApplication.shared.open(url)
                                     }
+
+                                } label: {
+
+                                    HStack(spacing: 8) {
+
+                                        Image(systemName: "play.fill")
+
+                                        Text("Preview")
+                                            .fontWeight(.semibold)
+                                    }
+                                    .frame(maxWidth: .infinity)
+                                    .padding(.vertical, 14)
+                                    .background(Color.orange)
+                                    .foregroundStyle(.white)
+                                    .clipShape(
+                                        RoundedRectangle(cornerRadius: 16)
+                                    )
+                                    .shadow(
+                                        color: .orange.opacity(0.4),
+                                        radius: 8,
+                                        x: 0,
+                                        y: 4
+                                    )
                                 }
                             }
                         }
-                        .padding()
+                        .padding(24)
+                        .background(
+                            RoundedRectangle(cornerRadius: 24)
+                                .fill(Color.white.opacity(0.05))
+                        )
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 24)
+                                .stroke(
+                                    Color.orange.opacity(0.3),
+                                    lineWidth: 1
+                                )
+                        )
                     }
                     
                     // Error

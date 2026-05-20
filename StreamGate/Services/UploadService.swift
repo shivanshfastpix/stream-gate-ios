@@ -2,8 +2,8 @@ import Foundation
 
 private let apiKey: String = "https://api.fastpix.io/v1/on-demand/upload"
 
-private let accessTokenID: String = "659458ba-19c9-4ecd-8cfc-4e74a5efe8d5"
-private let secretKey: String = "de72e832-785d-41ec-b16c-d41f91a30304"
+private let accessTokenID: String = "abaa00cd-b442-456d-8956-69e0a626ef89"
+private let secretKey: String = "84210eed-9087-4bbe-b684-19cb49e6dfc0"
 
 import Foundation
 
@@ -119,7 +119,7 @@ final class UploadService {
     
     func getResponse(
         uploadId: String
-    ) async throws -> (String, String?) {
+    ) async -> (String, String?)? {
 
         print("entering getMediaStatus for upload id : \(uploadId)")
 
@@ -131,7 +131,7 @@ final class UploadService {
             string: "https://api.fastpix.io/v1/on-demand/\(uploadId)"
         ) else {
 
-            throw URLError(.badURL)
+            return nil
         }
 
         var request = URLRequest(url: url)
@@ -143,48 +143,48 @@ final class UploadService {
             forHTTPHeaderField: "Authorization"
         )
 
-        let (data, response) =
-        try await URLSession.shared.data(for: request)
-        print("data is : \(data)")
-        print("response : \(response)")
+        do {
 
-        guard let httpResponse =
-                response as? HTTPURLResponse else {
+            let (data, response) =
+            try await URLSession.shared.data(for: request)
 
-            throw URLError(.badServerResponse)
+            guard let httpResponse =
+                    response as? HTTPURLResponse else {
+
+                return nil
+            }
+
+            print("status code => \(httpResponse.statusCode)")
+
+            // ignore temporary server errors
+            guard (200...299).contains(
+                httpResponse.statusCode
+            ) else {
+
+                print("video not ready yet")
+                return nil
+            }
+
+            let decoded = try JSONDecoder().decode(
+                MediaResponse.self,
+                from: data
+            )
+
+            let status = decoded.data.status
+
+            let playbackId =
+            decoded.data.playbackIds.first?.id
+
+            print("status => \(status)")
+            print("playbackId => \(playbackId ?? "")")
+
+            return (status, playbackId)
+
+        } catch {
+
+            print("temporary polling error: \(error)")
+            return nil
         }
-
-        print("status code => \(httpResponse.statusCode)")
-
-        if let jsonString =
-            String(data: data, encoding: .utf8) {
-
-            print("response => \(jsonString)")
-        }
-
-        guard (200...299).contains(
-            httpResponse.statusCode
-        ) else {
-            print("getting error")
-            
-            throw URLError(.badServerResponse)
-        }
-
-        let decoded = try JSONDecoder().decode(
-            MediaResponse.self,
-            from: data
-        )
-        print("decpded data : \(data)")
-
-        let status = decoded.data.status
-
-        let playbackId =
-        decoded.data.playbackIds.first?.id
-
-        print("status => \(status)")
-        print("playbackId => \(playbackId ?? "")")
-
-        return (status, playbackId)
     }
     
     func getMediaStatus(

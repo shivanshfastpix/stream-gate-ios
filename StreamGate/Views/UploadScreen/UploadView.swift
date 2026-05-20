@@ -69,6 +69,7 @@ struct UploadView: View {
                                 .padding(.horizontal)
                             }
                             
+                            
                             // Upload Success
                             
                             if vm.uploadCompleted {
@@ -78,38 +79,114 @@ struct UploadView: View {
                                     .fontWeight(.semibold)
                             }
                             
+                            if vm.isProcessingVideo {
+
+                                VStack(spacing: 12) {
+
+                                    ProgressView()
+
+                                    Text("Processing video...")
+                                        .foregroundStyle(.white)
+                                }
+                                .padding()
+                            }
+                            
                             if let sharedURL = vm.sharedURL {
 
-                                VStack(spacing: 16) {
+                                VStack(spacing: 20) {
+
+                                    Image(systemName: "checkmark.circle.fill")
+                                        .font(.system(size: 60))
+                                        .foregroundStyle(.green)
 
                                     Text("Video Ready")
-                                        .foregroundStyle(.green)
+                                        .font(.title3)
                                         .fontWeight(.bold)
+                                        .foregroundStyle(.white)
 
                                     Text(sharedURL)
-                                        .foregroundStyle(.white)
                                         .font(.caption)
+                                        .foregroundStyle(.gray)
                                         .multilineTextAlignment(.center)
+                                        .padding(.horizontal)
 
-                                    HStack {
+                                    HStack(spacing: 16) {
 
-                                        Button("Copy Link") {
+                                        // Copy Button
+
+                                        Button {
 
                                             UIPasteboard.general.string = sharedURL
+
+                                        } label: {
+
+                                            HStack {
+
+                                                Image(systemName: "doc.on.doc.fill")
+
+                                                Text("Copy Link")
+                                                    .fontWeight(.semibold)
+                                            }
+                                            .frame(maxWidth: .infinity)
+                                            .padding(.vertical, 14)
+                                            .background(Color.orange)
+                                            .foregroundStyle(.white)
+                                            .clipShape(
+                                                RoundedRectangle(cornerRadius: 14)
+                                            )
+                                            .shadow(
+                                                color: .orange.opacity(0.4),
+                                                radius: 8,
+                                                x: 0,
+                                                y: 4
+                                            )
                                         }
 
-                                        Button("Preview") {
+                                        // Preview Button
+
+                                        Button {
 
                                             if let url = URL(string: sharedURL) {
 
                                                 UIApplication.shared.open(url)
                                             }
+
+                                        } label: {
+
+                                            HStack {
+
+                                                Image(systemName: "play.fill")
+
+                                                Text("Preview")
+                                                    .fontWeight(.semibold)
+                                            }
+                                            .frame(maxWidth: .infinity)
+                                            .padding(.vertical, 14)
+                                            .background(Color.orange)
+                                            .foregroundStyle(.white)
+                                            .clipShape(
+                                                RoundedRectangle(cornerRadius: 14)
+                                            )
+                                            .shadow(
+                                                color: .orange.opacity(0.4),
+                                                radius: 8,
+                                                x: 0,
+                                                y: 4
+                                            )
                                         }
                                     }
                                 }
-                                .padding()
+                                .padding(24)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 24)
+                                        .fill(Color.white.opacity(0.05))
+                                )
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 24)
+                                        .stroke(Color.orange.opacity(0.3), lineWidth: 1)
+                                )
+                                .padding(.horizontal)
                             }
-                            
                             if let error = vm.uploadError {
 
                                 VStack(spacing: 12) {

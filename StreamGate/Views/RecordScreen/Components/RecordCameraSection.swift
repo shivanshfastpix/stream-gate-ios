@@ -7,7 +7,7 @@ struct RecordCameraSection: View {
     var body: some View {
         
         VStack {
-            
+          
             Button {
                 onTap()
             } label: {

@@ -111,15 +111,21 @@ struct RecordView: View {
                     Color.black
                         .ignoresSafeArea()
                     
-                    VStack {
-                        
+                    VStack(spacing:60) {
+
                         HeaderRecordSection()
                         
-//                        RecordCameraSection {
-//                            showCamera = true
-//                        }
+                        VStack(spacing:18){
+                            RecordCameraSection {
+                                showCamera = true
+                            }
+                            
+                            RecordScreenSection()
+                            
+                        }
+                      
                         
-                        RecordScreenSection()
+                       
                     }
                 }
                 .sheet(isPresented: $showCamera) {
