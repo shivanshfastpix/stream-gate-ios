@@ -1,82 +1,58 @@
+//import SwiftUI
+//
+//struct RecordScreenSection: View {
+//    
+//    var body: some View {
+//        
+//        VStack(spacing: 20) {
+//            
+//            Text("Global Screen Recording")
+//                .foregroundColor(.white)
+//                .font(.title3.bold())
+//            
+//            ZStack {
+//                
+//                RoundedRectangle(cornerRadius: 20)
+//                    .fill(Color.red)
+//                    .frame(width: 220, height: 60)
+//                
+//                Text("Start Recording")
+//                    .foregroundColor(.white)
+//                    .font(.headline)
+//                
+//                BroadcastPickerView()
+//                    .frame(width: 220, height: 60)
+//                    .opacity(0.02)
+//            }
+//        }
+//    }
+//}
+
 import SwiftUI
 
 struct RecordScreenSection: View {
     
-    @StateObject private var recorder =
-    ScreenRecorder.shared
-    
-    @StateObject private var vm = UploadViewModel()
-    
-    @State private var isLoading = false
-    
     var body: some View {
         
-        Button {
+        VStack(spacing: 20) {
             
-            Task {
+            Text("Global Screen Recording")
+                .foregroundColor(.white)
+                .font(.title3.bold())
+            
+            ZStack {
                 
-                do {
-                    
-                    if recorder.isRecording {
-                        
-                        isLoading = true
-                        
-                        let fileURL =
-                        try await recorder.stopRecording()
-                        
-                        isLoading = false
-                        
-                        print(fileURL)
-                        
-                        // Upload To FastPix
-                        
-                        // await vm.uploadVideo(fileURL: fileURL)
-                        Task {
-                            await vm.uploadVideo(
-                                fileURL: fileURL
-                            )
-                        }
-                        
-                    } else {
-                        
-                        try await recorder.startRecording()
-                    }
-                    
-                } catch {
-                    
-                    print(error.localizedDescription)
-                }
+                RoundedRectangle(cornerRadius: 20)
+                    .fill(Color.red)
+                    .frame(width: 220, height: 60)
+                
+                Text("Start Recording")
+                    .foregroundColor(.white)
+                    .font(.headline)
+                
+                BroadcastPickerView()
+                    .frame(width: 220, height: 60)
             }
-            
-        } label: {
-            
-            HStack(spacing: 14) {
-                
-                Image(systemName:
-                        recorder.isRecording
-                      ? "stop.circle.fill"
-                      : "record.circle.fill"
-                )
-                .font(
-                    .system(size: 28, weight: .semibold)
-                )
-                
-                Text(
-                    recorder.isRecording
-                    ? "Stop Recording"
-                    : "Record Screen"
-                )
-                .font(
-                    .system(size: 22, weight: .bold)
-                )
-            }
-            .foregroundColor(.white)
-            .frame(maxWidth: 300)
-            .frame(height: 70)
-            .background(
-                RoundedRectangle(cornerRadius: 22)
-                    .fill(Color.black.opacity(0.12))
-            )
         }
     }
 }

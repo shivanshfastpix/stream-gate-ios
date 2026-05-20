@@ -8,13 +8,60 @@
 
 /* Begin PBXBuildFile section */
 		1D36ACE62FBAF54D00B8B4C3 /* fp-swift-upload-sdk in Frameworks */ = {isa = PBXBuildFile; productRef = 1D36ACE52FBAF54D00B8B4C3 /* fp-swift-upload-sdk */; };
+		1D933EF92FBCC4E7004AF7B4 /* ReplayKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D933EF82FBCC4E7004AF7B4 /* ReplayKit.framework */; };
+		1D933F0F2FBCC4E8004AF7B4 /* ScreenBroadcastExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 1D933EF62FBCC4E7004AF7B4 /* ScreenBroadcastExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		1D933F0D2FBCC4E8004AF7B4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1DD6953E2FB4526F00754A38 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1D933EF52FBCC4E7004AF7B4;
+			remoteInfo = ScreenBroadcastExtension;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		1D933F102FBCC4E8004AF7B4 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				1D933F0F2FBCC4E8004AF7B4 /* ScreenBroadcastExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		1D933EF62FBCC4E7004AF7B4 /* ScreenBroadcastExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ScreenBroadcastExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		1D933EF82FBCC4E7004AF7B4 /* ReplayKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ReplayKit.framework; path = System/Library/Frameworks/ReplayKit.framework; sourceTree = SDKROOT; };
+		1D933F042FBCC4E8004AF7B4 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		1DD695462FB4526F00754A38 /* StreamGate.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StreamGate.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		1D933F152FBCC4E8004AF7B4 /* Exceptions for "ScreenBroadcastExtension" folder in "ScreenBroadcastExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 1D933EF52FBCC4E7004AF7B4 /* ScreenBroadcastExtension */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		1D933EFA2FBCC4E8004AF7B4 /* ScreenBroadcastExtension */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				1D933F152FBCC4E8004AF7B4 /* Exceptions for "ScreenBroadcastExtension" folder in "ScreenBroadcastExtension" target */,
+			);
+			path = ScreenBroadcastExtension;
+			sourceTree = "<group>";
+		};
 		1DD695482FB4526F00754A38 /* StreamGate */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = StreamGate;
@@ -23,6 +70,14 @@
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		1D933EF32FBCC4E7004AF7B4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1D933EF92FBCC4E7004AF7B4 /* ReplayKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		1DD695432FB4526F00754A38 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -34,10 +89,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1D933EF72FBCC4E7004AF7B4 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1D933EF82FBCC4E7004AF7B4 /* ReplayKit.framework */,
+				1D933F042FBCC4E8004AF7B4 /* UIKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		1DD6953D2FB4526F00754A38 = {
 			isa = PBXGroup;
 			children = (
 				1DD695482FB4526F00754A38 /* StreamGate */,
+				1D933EFA2FBCC4E8004AF7B4 /* ScreenBroadcastExtension */,
+				1D933EF72FBCC4E7004AF7B4 /* Frameworks */,
 				1DD695472FB4526F00754A38 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -46,6 +112,7 @@
 			isa = PBXGroup;
 			children = (
 				1DD695462FB4526F00754A38 /* StreamGate.app */,
+				1D933EF62FBCC4E7004AF7B4 /* ScreenBroadcastExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -53,6 +120,28 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		1D933EF52FBCC4E7004AF7B4 /* ScreenBroadcastExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1D933F162FBCC4E8004AF7B4 /* Build configuration list for PBXNativeTarget "ScreenBroadcastExtension" */;
+			buildPhases = (
+				1D933EF22FBCC4E7004AF7B4 /* Sources */,
+				1D933EF32FBCC4E7004AF7B4 /* Frameworks */,
+				1D933EF42FBCC4E7004AF7B4 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				1D933EFA2FBCC4E8004AF7B4 /* ScreenBroadcastExtension */,
+			);
+			name = ScreenBroadcastExtension;
+			packageProductDependencies = (
+			);
+			productName = ScreenBroadcastExtension;
+			productReference = 1D933EF62FBCC4E7004AF7B4 /* ScreenBroadcastExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		1DD695452FB4526F00754A38 /* StreamGate */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1DD695512FB4527100754A38 /* Build configuration list for PBXNativeTarget "StreamGate" */;
@@ -60,10 +149,12 @@
 				1DD695422FB4526F00754A38 /* Sources */,
 				1DD695432FB4526F00754A38 /* Frameworks */,
 				1DD695442FB4526F00754A38 /* Resources */,
+				1D933F102FBCC4E8004AF7B4 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				1D933F0E2FBCC4E8004AF7B4 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				1DD695482FB4526F00754A38 /* StreamGate */,
@@ -86,6 +177,9 @@
 				LastSwiftUpdateCheck = 2650;
 				LastUpgradeCheck = 2650;
 				TargetAttributes = {
+					1D933EF52FBCC4E7004AF7B4 = {
+						CreatedOnToolsVersion = 26.5;
+					};
 					1DD695452FB4526F00754A38 = {
 						CreatedOnToolsVersion = 26.5;
 					};
@@ -109,11 +203,19 @@
 			projectRoot = "";
 			targets = (
 				1DD695452FB4526F00754A38 /* StreamGate */,
+				1D933EF52FBCC4E7004AF7B4 /* ScreenBroadcastExtension */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		1D933EF42FBCC4E7004AF7B4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		1DD695442FB4526F00754A38 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -124,6 +226,13 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		1D933EF22FBCC4E7004AF7B4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		1DD695422FB4526F00754A38 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -133,7 +242,73 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		1D933F0E2FBCC4E8004AF7B4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1D933EF52FBCC4E7004AF7B4 /* ScreenBroadcastExtension */;
+			targetProxy = 1D933F0D2FBCC4E8004AF7B4 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		1D933F112FBCC4E8004AF7B4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = ScreenBroadcastExtension/ScreenBroadcastExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 2HRSYU8K5T;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ScreenBroadcastExtension/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = ScreenBroadcastExtension;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.streamgate.StreamGate.ScreenBroadcastExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		1D933F122FBCC4E8004AF7B4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = ScreenBroadcastExtension/ScreenBroadcastExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 2HRSYU8K5T;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ScreenBroadcastExtension/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = ScreenBroadcastExtension;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.streamgate.StreamGate.ScreenBroadcastExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		1DD6954F2FB4527100754A38 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -262,6 +437,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = StreamGate/StreamGate.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 2HRSYU8K5T;
@@ -299,6 +475,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = StreamGate/StreamGate.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 2HRSYU8K5T;
@@ -334,6 +511,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		1D933F162FBCC4E8004AF7B4 /* Build configuration list for PBXNativeTarget "ScreenBroadcastExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1D933F112FBCC4E8004AF7B4 /* Debug */,
+				1D933F122FBCC4E8004AF7B4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		1DD695412FB4526F00754A38 /* Build configuration list for PBXProject "StreamGate" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

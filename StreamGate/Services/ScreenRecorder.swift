@@ -64,7 +64,7 @@ final class ScreenRecorder: ObservableObject {
         
         recorder.isMicrophoneEnabled = true
         
-        try await recorder.startCapture { [weak self] sampleBuffer,
+         recorder.startCapture { [weak self] sampleBuffer,
                                           bufferType,
                                           error in
             
@@ -121,7 +121,7 @@ final class ScreenRecorder: ObservableObject {
         
         let recorder = RPScreenRecorder.shared()
         
-        try await recorder.stopCapture()
+        recorder.stopCapture()
         
         videoInput?.markAsFinished()
         
