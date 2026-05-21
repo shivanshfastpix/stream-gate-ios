@@ -1,9 +1,11 @@
 import Foundation
 
-private let apiKey: String = "https://api.fastpix.io/v1/on-demand/upload"
+private let apiKey: String = ProcessInfo.processInfo.environment["API_KEY"] ?? ""
 
-private let accessTokenID: String = "e33d37ea-cc8c-4907-8d71-ea902545e3ad"
-private let secretKey: String = "723e262a-a11e-4ece-9270-ddb975f97f23"
+private let accessTokenID: String = ProcessInfo.processInfo.environment["ACCESS_TOKEN_ID"] ?? ""
+private let secretKey: String = ProcessInfo.processInfo.environment["SECRET_KEY"] ?? ""
+
+
 
 import Foundation
 

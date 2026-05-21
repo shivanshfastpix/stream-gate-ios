@@ -10,6 +10,7 @@
 		1D36ACE62FBAF54D00B8B4C3 /* fp-swift-upload-sdk in Frameworks */ = {isa = PBXBuildFile; productRef = 1D36ACE52FBAF54D00B8B4C3 /* fp-swift-upload-sdk */; };
 		1D933EF92FBCC4E7004AF7B4 /* ReplayKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D933EF82FBCC4E7004AF7B4 /* ReplayKit.framework */; };
 		1D933F0F2FBCC4E8004AF7B4 /* ScreenBroadcastExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 1D933EF62FBCC4E7004AF7B4 /* ScreenBroadcastExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		1DB9B04C2FBF2B3E0076817A /* fp-swift-upload-sdk in Frameworks */ = {isa = PBXBuildFile; productRef = 1DB9B04B2FBF2B3E0076817A /* fp-swift-upload-sdk */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -81,6 +82,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1DB9B04C2FBF2B3E0076817A /* fp-swift-upload-sdk in Frameworks */,
 				1D933EF92FBCC4E7004AF7B4 /* ReplayKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -144,6 +146,7 @@
 			);
 			name = ScreenBroadcastExtension;
 			packageProductDependencies = (
+				1DB9B04B2FBF2B3E0076817A /* fp-swift-upload-sdk */,
 			);
 			productName = ScreenBroadcastExtension;
 			productReference = 1D933EF62FBCC4E7004AF7B4 /* ScreenBroadcastExtension.appex */;
@@ -276,7 +279,7 @@
 				INFOPLIST_FILE = ScreenBroadcastExtension/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = StreamGate;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -307,7 +310,7 @@
 				INFOPLIST_FILE = ScreenBroadcastExtension/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = StreamGate;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -468,7 +471,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -506,7 +509,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -567,6 +570,11 @@
 /* Begin XCSwiftPackageProductDependency section */
 		1D36ACE52FBAF54D00B8B4C3 /* fp-swift-upload-sdk */ = {
 			isa = XCSwiftPackageProductDependency;
+			productName = "fp-swift-upload-sdk";
+		};
+		1DB9B04B2FBF2B3E0076817A /* fp-swift-upload-sdk */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1D36ACE42FBAF54D00B8B4C3 /* XCLocalSwiftPackageReference "../../Downloads/iOS-Uploads-main" */;
 			productName = "fp-swift-upload-sdk";
 		};
 /* End XCSwiftPackageProductDependency section */

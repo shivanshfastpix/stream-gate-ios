@@ -65,23 +65,6 @@ final class UploadViewModel: NSObject,ObservableObject, UploadSDKErrorDelegate  
             print("response / signed url : \(signedUrl)")
             print("upload id : \(uploadId)")
 
-//            uploader.progressHandler = { [weak self] progress in
-//                
-//                guard let self else { return }
-//                
-//                print("progress => \(progress)")
-//                
-//                Task { @MainActor in
-//                    
-//                     self.uploadProgress = Double(progress)
-//                    
-//                    if progress >= 0.999 {
-//                        
-//                        self.isUploading = false
-//                        self.uploadCompleted = true
-//                    }
-//                }
-//            }
             
             uploader.progressHandler = { [weak self] progress in
                 
@@ -110,27 +93,6 @@ final class UploadViewModel: NSObject,ObservableObject, UploadSDKErrorDelegate  
                             )
                             
 //                        }
-                      
-
-                        
-//                        do {
-//                            print("calling inside the handler")
-////                            try await Task.sleep(for: .seconds(3))
-//                            
-//                            try await Task.sleep(nanoseconds: 5_000_000_000)
-//
-//                            let playbackId = try await self.uploadService
-//                                .getSignedURL(videoId: uploadId)
-//                            print("playback id : \(playbackId)")
-//
-//                            self.sharedURL =
-//                            "https://stream.fastpix.io/\(playbackId).m3u8"
-//                            print("https://stream.fastpix.io/\(playbackId).m3u8")
-//
-//                        } catch {
-//
-//                            self.uploadError = error.localizedDescription
-//                        }
                     }
                 }
             }
@@ -140,7 +102,7 @@ final class UploadViewModel: NSObject,ObservableObject, UploadSDKErrorDelegate  
            uploader.uploadFile(
                 file: fileURL,
                 endpoint: signedUrl.absoluteString,
-                chunkSizeKB: 5
+                chunkSizeKB: 5120
             )
 
         } catch {
