@@ -13,6 +13,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		1D3EB65C2FBDEF0000B56728 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1DD6953E2FB4526F00754A38 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1D933EF52FBCC4E7004AF7B4;
+			remoteInfo = ScreenBroadcastExtension;
+		};
 		1D933F0D2FBCC4E8004AF7B4 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 1DD6953E2FB4526F00754A38 /* Project object */;
@@ -155,6 +162,7 @@
 			);
 			dependencies = (
 				1D933F0E2FBCC4E8004AF7B4 /* PBXTargetDependency */,
+				1D3EB65D2FBDEF0000B56728 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				1DD695482FB4526F00754A38 /* StreamGate */,
@@ -243,6 +251,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		1D3EB65D2FBDEF0000B56728 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1D933EF52FBCC4E7004AF7B4 /* ScreenBroadcastExtension */;
+			targetProxy = 1D3EB65C2FBDEF0000B56728 /* PBXContainerItemProxy */;
+		};
 		1D933F0E2FBCC4E8004AF7B4 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 1D933EF52FBCC4E7004AF7B4 /* ScreenBroadcastExtension */;
