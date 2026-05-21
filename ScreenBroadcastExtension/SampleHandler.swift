@@ -223,9 +223,19 @@ class SampleHandler: RPBroadcastSampleHandler {
     }
  
     override func broadcastStarted(withSetupInfo setupInfo: [String : NSObject]?) {
+        
         if let dir = Self.container() {
             try? FileManager.default.removeItem(at: dir.appendingPathComponent("LIFECYCLE.log"))
         }
+        
+        // ✅ Clear any leftover files from previous recordings FIRST
+        Self.clearOldRecordings()
+
+        // ✅ Also clear the stale UserDefaults signal so the main app
+        // doesn't navigate to a file that no longer exists
+        UserDefaults(suiteName: Self.suiteName)?.removeObject(forKey: "recordedVideoURL")
+
+        
         Self.writeStage("1_STARTED")
  
         let name = "\(UUID().uuidString).mp4"
@@ -248,6 +258,36 @@ class SampleHandler: RPBroadcastSampleHandler {
             finishBroadcastWithError(error)
         }
     }
+    
+    private static func clearOldRecordings() {
+            let fileManager = FileManager.default
+            
+            // 1. Clean the Shared App Group Container
+            if let groupDir = container() {
+                do {
+                    let groupFiles = try fileManager.contentsOfDirectory(at: groupDir, includingPropertiesForKeys: nil)
+                    for file in groupFiles where file.pathExtension.lowercased() == "mp4" {
+                        try fileManager.removeItem(at: file)
+                        Self.writeStage("CLEANUP", "Deleted old group file: \(file.lastPathComponent)")
+                    }
+                } catch {
+                    Self.writeStage("CLEANUP_ERR", "Failed to clean group dir: \(error.localizedDescription)")
+                }
+            }
+            
+            // 2. Clean the Extension's Temporary Directory
+            let tmpDir = URL(fileURLWithPath: NSTemporaryDirectory())
+            do {
+                let tempFiles = try fileManager.contentsOfDirectory(at: tmpDir, includingPropertiesForKeys: nil)
+                for file in tempFiles where file.pathExtension.lowercased() == "mp4" {
+                    try fileManager.removeItem(at: file)
+                    Self.writeStage("CLEANUP", "Deleted old temp file: \(file.lastPathComponent)")
+                }
+            } catch {
+                Self.writeStage("CLEANUP_ERR", "Failed to clean temp dir: \(error.localizedDescription)")
+            }
+        }
+    
  
     override func processSampleBuffer(_ sampleBuffer: CMSampleBuffer, with type: RPSampleBufferType) {
         guard type == .video, CMSampleBufferDataIsReady(sampleBuffer) else { return }

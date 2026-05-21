@@ -2,6 +2,7 @@
 import SwiftUI
 
 struct RecordScreenSection: View {
+    let onTap: () -> Void
     
     var body: some View {
         
@@ -25,11 +26,14 @@ struct RecordScreenSection: View {
         )
         .contentShape(Rectangle())
         .onTapGesture {
+            onTap()
             BroadcastPickerView.trigger()
         }
     }
 }
 
 #Preview {
-    RecordScreenSection()
+    RecordScreenSection(){
+        
+    }
 }
