@@ -34,6 +34,7 @@ struct RecordView: View {
                     if let videoURL = recordedVideoURL {
                         UploadPreviewView(videoURL: videoURL)
                     }
+                  
                 }
                 .onReceive(timer) { _ in
                     checkForBroadcastVideo()

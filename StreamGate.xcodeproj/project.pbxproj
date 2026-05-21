@@ -270,11 +270,13 @@
 				CODE_SIGN_ENTITLEMENTS = ScreenBroadcastExtension/ScreenBroadcastExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = 2HRSYU8K5T;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ScreenBroadcastExtension/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = ScreenBroadcastExtension;
+				INFOPLIST_KEY_CFBundleDisplayName = StreamGate;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -299,11 +301,13 @@
 				CODE_SIGN_ENTITLEMENTS = ScreenBroadcastExtension/ScreenBroadcastExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = 2HRSYU8K5T;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ScreenBroadcastExtension/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = ScreenBroadcastExtension;
+				INFOPLIST_KEY_CFBundleDisplayName = StreamGate;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

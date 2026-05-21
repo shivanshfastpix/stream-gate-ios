@@ -2,8 +2,8 @@ import Foundation
 
 private let apiKey: String = "https://api.fastpix.io/v1/on-demand/upload"
 
-private let accessTokenID: String = "abaa00cd-b442-456d-8956-69e0a626ef89"
-private let secretKey: String = "84210eed-9087-4bbe-b684-19cb49e6dfc0"
+private let accessTokenID: String = "e33d37ea-cc8c-4907-8d71-ea902545e3ad"
+private let secretKey: String = "723e262a-a11e-4ece-9270-ddb975f97f23"
 
 import Foundation
 

@@ -1,68 +1,3 @@
-//import SwiftUI
-//import ReplayKit
-//
-//struct BroadcastPickerView:
-//UIViewRepresentable {
-//    
-//    func makeUIView(context: Context)
-//    -> RPSystemBroadcastPickerView {
-//        
-//        let picker =
-//        RPSystemBroadcastPickerView()
-//        
-//        picker.preferredExtension =
-//        "com.streamgate.StreamGate.ScreenBroadcastExtension"
-//        
-//        picker.showsMicrophoneButton = true
-//        
-//        return picker
-//    }
-//    
-//    func updateUIView(
-//        _ uiView:
-//        RPSystemBroadcastPickerView,
-//        context: Context
-//    ) {
-//    }
-//}
-
-// it is working
-//
-//import SwiftUI
-//import ReplayKit
-//
-//struct BroadcastPickerView: UIViewRepresentable {
-//    
-//    func makeUIView(
-//        context: Context
-//    ) -> RPSystemBroadcastPickerView {
-//        
-//        let picker =
-//        RPSystemBroadcastPickerView(
-//            frame: CGRect(
-//                x: 0,
-//                y: 0,
-//                width: 300,
-//                height: 70
-//            )
-//        )
-//        
-//        picker.preferredExtension =
-//        "com.streamgate.StreamGate.ScreenBroadcastExtension"
-//        
-//        picker.showsMicrophoneButton = false
-//        
-//        return picker
-//    }
-//    
-//    func updateUIView(
-//        _ uiView:
-//        RPSystemBroadcastPickerView,
-//        context: Context
-//    ) {
-//    }
-//}
-
 import SwiftUI
 import ReplayKit
 
@@ -70,54 +5,40 @@ struct BroadcastPickerView: UIViewRepresentable {
     
     static weak var pickerView: RPSystemBroadcastPickerView?
     
-    func makeUIView(
-        context: Context
-    ) -> RPSystemBroadcastPickerView {
-        
-        let picker = RPSystemBroadcastPickerView(
-            frame: CGRect(
-                x: 0,
-                y: 0,
-                width: 44,
-                height: 44
-            )
-        )
-        
-        picker.preferredExtension =
-        "com.streamgate.StreamGate.ScreenBroadcastExtension"
-        
+    func makeUIView(context: Context) -> RPSystemBroadcastPickerView {
+        let picker = RPSystemBroadcastPickerView(frame: CGRect(x: 0, y: 0, width: 44, height: 44))
         picker.showsMicrophoneButton = false
         
-        BroadcastPickerView.pickerView = picker
+        picker.preferredExtension = "com.streamgate.StreamGate.ScreenBroadcastExtension"
+        
+        if let button = picker.subviews.first(where: { $0 is UIButton }) as? UIButton {
+            button.imageView?.tintColor = .white
+        }
+        
+        // 💡 THE MISSING LINE: Assign the created picker to your static reference so trigger() can find it!
+        DispatchQueue.main.async {
+            BroadcastPickerView.pickerView = picker
+        }
         
         return picker
     }
     
-    func updateUIView(
-        _ uiView: RPSystemBroadcastPickerView,
-        context: Context
-    ) {
-    }
+    func updateUIView(_ uiView: RPSystemBroadcastPickerView, context: Context) {}
 }
 
 // MARK: - Trigger Helper
-
 extension BroadcastPickerView {
-    
     static func trigger() {
-        
         guard let picker = pickerView else {
+            print("❌ Trigger failed: picker is nil")
             return
         }
         
-        guard let button = picker.subviews.first(
-            where: { $0 is UIButton }
-        ) as? UIButton else {
+        guard let button = picker.subviews.first(where: { $0 is UIButton }) as? UIButton else {
+            print("❌ Trigger failed: could not find UIButton inside picker")
             return
         }
         
-        button.sendActions(
-            for: .touchUpInside
-        )
+        button.sendActions(for: .touchUpInside)
     }
 }

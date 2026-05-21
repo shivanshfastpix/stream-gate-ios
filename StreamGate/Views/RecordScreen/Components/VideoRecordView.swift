@@ -40,24 +40,7 @@ struct VideoRecorderView: UIViewControllerRepresentable {
         Coordinator(parent: self)
     }
     
-//    func makeUIViewController(
-//        context: Context
-//    ) -> UIImagePickerController {
-//        
-//        let picker = UIImagePickerController()
-//        
-//        picker.sourceType = .camera
-//        picker.mediaTypes = ["public.movie"]
-//        picker.cameraCaptureMode = .video
-//        
-//        // Optional production improvements
-//        picker.videoQuality = .typeMedium
-//        picker.videoMaximumDuration = 60
-//        
-//        picker.delegate = context.coordinator
-//        
-//        return picker
-//    }
+
     func makeUIViewController(
         context: Context
     ) -> UIImagePickerController {
