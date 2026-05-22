@@ -66,8 +66,8 @@ final class UploadService {
                    let urlString = dataDic["url"] as? String,
                    
                    let uploadUrl = URL(string: urlString) {
-                    print("data from fastpix server : \(dataDic)")
-                    print("upload id : \(uploadId)")
+//                    print("data from fastpix server : \(dataDic)")
+//                    print("upload id : \(uploadId)")
                     return (uploadUrl, uploadId)
                 } else {
                     print("Failed to parse upload URL from response.")

@@ -62,8 +62,8 @@ final class UploadViewModel: NSObject,ObservableObject, UploadSDKErrorDelegate  
                 return
             }
             
-            print("response / signed url : \(signedUrl)")
-            print("upload id : \(uploadId)")
+//            print("response / signed url : \(signedUrl)")
+//            print("upload id : \(uploadId)")
 
             
             uploader.progressHandler = { [weak self] progress in
