@@ -1,6 +1,6 @@
 # StreamGate iOS App
 
-StreamGate is an open-source native iOS application designed as a technical showcase for capturing and uploading video content directly to the cloud. Built purely for developers, it demonstrates how to handle complex mobile media workflows — such as camera capture, background screen recording, and reliable direct-to-cloud resumable uploads using FastPix infrastructure.
+StreamGate is an IOS application designed as a technical showcase for capturing and uploading video content directly to the cloud. Built purely for developers, it demonstrates how to handle complex mobile media workflows — such as camera capture, background screen recording, and reliable direct-to-cloud resumable uploads using FastPix infrastructure.
 
 Once an upload completes, StreamGate generates an instant, shareable playback link.
 
