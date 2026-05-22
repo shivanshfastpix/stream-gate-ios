@@ -42,7 +42,3 @@ struct HeaderRecordSection:View{
 
     }
 }
-
-#Preview {
-    HeaderRecordSection()
-}

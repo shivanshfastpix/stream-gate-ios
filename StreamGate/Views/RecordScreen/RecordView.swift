@@ -1,106 +1,422 @@
 import SwiftUI
 import Combine
 import ReplayKit
+import AVFoundation
 
 struct RecordView: View {
+
+    // MARK: - Recording State
+
     @State private var showCamera = false
     @State private var navigateToPreview = false
     @State private var recordedVideoURL: URL?
-    @State private var isRecording = false          // ← tracks broadcast state
+    @State private var isRecording = false
 
-    let timer = Timer.publish(every: 2.0, on: .main, in: .common).autoconnect()
+    // MARK: - Permission State
+
+    @State private var showPermissionAlert = false
+    @State private var permissionMessage = ""
+
+    // MARK: - Dependencies
+
     @StateObject private var vm = UploadViewModel()
 
+    private let timer = Timer.publish(
+        every: 2.0,
+        on: .main,
+        in: .common
+    ).autoconnect()
+
+    // MARK: - Body
+
     var body: some View {
-        if #available(iOS 16.0, *) {
-            NavigationStack {
-                ZStack {
-                    Color.black.ignoresSafeArea()
 
-                    VStack(spacing: 60) {
-                        HeaderRecordSection()
+        Group {
 
-                        VStack(spacing: 18) {
-                            RecordCameraSection { showCamera = true }
+            if #available(iOS 16.0, *) {
 
-                            RecordScreenSection(
-                                onTap: {
-                                    if isRecording {
-                                        print("clicked button for recording so clean old video")
-                                        // User wants to stop — clean up,
-                                        // the extension handles finalization
-                                        clearPreviousRecording()
-                                    }
-                                    // If starting: clearPreviousRecording called on appear
-                                },
-                                isRecording: $isRecording
+                NavigationStack {
+
+                    ZStack {
+
+                        Color.black
+                            .ignoresSafeArea()
+
+                        VStack(spacing: 60) {
+
+                            HeaderRecordSection()
+
+                            VStack(spacing: 18) {
+
+                                cameraSection
+
+                                screenRecordingSection
+                            }
+                        }
+                    }
+                    .sheet(isPresented: $showCamera) {
+
+                        VideoRecorderView { videoURL in
+
+                            recordedVideoURL = videoURL
+                            navigateToPreview = true
+                        }
+                    }
+                    .navigationDestination(
+                        isPresented: $navigateToPreview
+                    ) {
+
+                        if let videoURL = recordedVideoURL {
+
+                            UploadPreviewView(
+                                videoURL: videoURL
                             )
                         }
                     }
-                }
-                .sheet(isPresented: $showCamera) {
-                    VideoRecorderView { videoURL in
-                        self.recordedVideoURL = videoURL
-                        self.navigateToPreview = true
+                    .alert(
+                        "Permission Required",
+                        isPresented: $showPermissionAlert
+                    ) {
+
+                        Button("Open Settings") {
+
+                            PermissionManager.shared
+                                .openSettings()
+                        }
+
+                        Button(
+                            "Cancel",
+                            role: .cancel
+                        ) {}
+
+                    } message: {
+
+                        Text(permissionMessage)
+                    }
+                    .onAppear {
+
+                        clearPreviousRecording()
+                    }
+                    .onReceive(timer) { _ in
+
+                        syncRecordingState()
+
+                        Task{
+                           await checkForBroadcastVideo()
+                        }
                     }
                 }
-                .navigationDestination(isPresented: $navigateToPreview) {
-                    if let videoURL = recordedVideoURL {
-                        UploadPreviewView(videoURL: videoURL)
-                    }
+
+            } else {
+
+                Text("iOS 16 Required")
+            }
+        }
+    }
+}
+
+// MARK: - Sections
+
+private extension RecordView {
+
+    var cameraSection: some View {
+
+        RecordCameraSection {
+
+            Task {
+
+                let hasPermission =
+                    await handleCameraRecordingPermission()
+
+                guard hasPermission else {
+                    return
                 }
-                .onReceive(timer) { _ in
-                    syncRecordingState()    // ← poll RPScreenRecorder
-                    checkForBroadcastVideo()
-                }
-                .onAppear {
-                    clearPreviousRecording()
-                    print("[StreamGate_MAIN] View appeared. Timer started.")
+
+                await MainActor.run {
+
+                    showCamera = true
                 }
             }
-        } else {
-            Text("iOS 16 Required")
         }
     }
 
-    // ── Sync UI with actual broadcast state ──────────────────────────────────
-    private func syncRecordingState() {
-        let broadcasting = UserDefaults(suiteName: "group.com.streamgate.broadcast")?
+    var screenRecordingSection: some View {
+
+        RecordScreenSection(
+
+            onTap: {
+
+                Task {
+
+                    let hasPermission =
+                        await handleScreenRecordingPermission()
+
+                    guard hasPermission else {
+                        return
+                    }
+
+                    if isRecording {
+
+                        clearPreviousRecording()
+                    }
+                }
+            },
+
+            isRecording: $isRecording
+        )
+    }
+}
+
+// MARK: - Permission Handling
+
+private extension RecordView {
+
+    func handleCameraRecordingPermission() async -> Bool {
+
+        let cameraStatus =
+            PermissionManager.shared.status(
+                for: .camera
+            )
+
+        let micStatus =
+            PermissionManager.shared.status(
+                for: .microphone
+            )
+
+        // Already Denied
+
+        if cameraStatus == .denied ||
+            micStatus == .denied {
+
+             showPermissionDenied(
+                message: """
+                Please enable Camera and Microphone access from Settings.
+                """
+            )
+
+            return false
+        }
+
+        // Camera Permission
+
+        if cameraStatus == .notDetermined {
+
+            let result =
+                await PermissionManager.shared.request(
+                    .camera
+                )
+
+            guard result == .authorized else {
+
+                 showPermissionDenied(
+                    message: """
+                    Camera access is required for recording videos.
+                    """
+                )
+
+                return false
+            }
+        }
+
+        // Microphone Permission
+
+        if micStatus == .notDetermined {
+
+            let result =
+                await PermissionManager.shared.request(
+                    .microphone
+                )
+
+            guard result == .authorized else {
+
+                 showPermissionDenied(
+                    message: """
+                    Microphone access is required for recording audio.
+                    """
+                )
+
+                return false
+            }
+        }
+
+        return true
+    }
+
+    func handleScreenRecordingPermission() async -> Bool {
+
+        let micStatus =
+            PermissionManager.shared.status(
+                for: .microphone
+            )
+
+        // Already Denied
+
+        if micStatus == .denied {
+
+             showPermissionDenied(
+                message: """
+                Please enable Microphone access from Settings.
+                """
+            )
+
+            return false
+        }
+
+        // Request Permission
+
+        if micStatus == .notDetermined {
+
+            let result =
+                await PermissionManager.shared.request(
+                    .microphone
+                )
+
+            guard result == .authorized else {
+
+                 showPermissionDenied(
+                    message: """
+                    Microphone access is required for screen recordings.
+                    """
+                )
+
+                return false
+            }
+        }
+
+        return true
+    }
+
+    @MainActor
+    func showPermissionDenied(
+        message: String
+    ) {
+
+        permissionMessage = message
+        showPermissionAlert = true
+    }
+}
+
+// MARK: - Recording State
+
+private extension RecordView {
+
+    func syncRecordingState() {
+
+        let broadcasting =
+            UserDefaults(
+                suiteName: "group.com.streamgate.broadcast"
+            )?
             .bool(forKey: "isBroadcasting") ?? false
 
         if isRecording != broadcasting {
+
             isRecording = broadcasting
-            print("[StreamGate_MAIN] 📡 Recording state changed → \(broadcasting ? "STARTED" : "STOPPED")")
         }
     }
+}
 
-    // ── Detect completed file ─────────────────────────────────────────────────
-    private func checkForBroadcastVideo() {
-        guard let defaults = UserDefaults(suiteName: "group.com.streamgate.broadcast"),
-              let path = defaults.string(forKey: "recordedVideoURL"),
-              FileManager.default.fileExists(atPath: path) else { return }
+// MARK: - Broadcast Video Handling
 
-        defaults.removeObject(forKey: "recordedVideoURL")
-        self.recordedVideoURL = URL(fileURLWithPath: path)
-        print("[StreamGate_MAIN] ✅ recorded video url: \(path)")
-        self.navigateToPreview = true
+private extension RecordView {
+
+    func checkForBroadcastVideo() async {
+
+        guard
+            let defaults = UserDefaults(
+                suiteName: "group.com.streamgate.broadcast"
+            ),
+            let path = defaults.string(
+                forKey: "recordedVideoURL"
+            )
+        else {
+            return
+        }
+
+        let fileURL = URL(fileURLWithPath: path)
+
+        guard FileManager.default.fileExists(
+            atPath: fileURL.path
+        ) else {
+            return
+        }
+
+        // Validate asset
+
+        let asset = AVURLAsset(url: fileURL)
+
+        do {
+
+            let isPlayable =
+                try await asset.load(.isPlayable)
+
+            guard isPlayable else {
+                return
+            }
+
+        } catch {
+
+//            print(
+//                "Failed to validate asset:",
+//                error.localizedDescription
+//            )
+
+            return
+        }
+
+        defaults.removeObject(
+            forKey: "recordedVideoURL"
+        )
+
+        recordedVideoURL = fileURL
+
+        navigateToPreview = true
     }
+}
 
-    // ── Cleanup ───────────────────────────────────────────────────────────────
-    private func clearPreviousRecording() {
+// MARK: - Cleanup
+
+private extension RecordView {
+
+    func clearPreviousRecording() {
+
         let suite = "group.com.streamgate.broadcast"
-        guard let defaults = UserDefaults(suiteName: suite) else { return }
 
-        if let path = defaults.string(forKey: "recordedVideoURL") {
-            let fileURL = URL(fileURLWithPath: path)
-            if FileManager.default.fileExists(atPath: fileURL.path) {
-                try? FileManager.default.removeItem(at: fileURL)
-                print("[StreamGate_MAIN] 🗑 Deleted previous recording: \(fileURL.lastPathComponent)")
+        guard let defaults = UserDefaults(
+            suiteName: suite
+        ) else {
+            return
+        }
+
+        if let path = defaults.string(
+            forKey: "recordedVideoURL"
+        ) {
+
+            let fileURL =
+                URL(fileURLWithPath: path)
+
+            if FileManager.default.fileExists(
+                atPath: fileURL.path
+            ) {
+
+                do {
+
+                    try FileManager.default
+                        .removeItem(at: fileURL)
+
+                } catch {
+
+                    print(
+                        "Failed to delete recording:",
+                        error.localizedDescription
+                    )
+                }
             }
         }
 
-        defaults.removeObject(forKey: "recordedVideoURL")
+        defaults.removeObject(
+            forKey: "recordedVideoURL"
+        )
+
         defaults.synchronize()
-        print("[StreamGate_MAIN] 🧹 Cleared recordedVideoURL from UserDefaults")
     }
 }

@@ -4,6 +4,28 @@ import Combine
 
 @MainActor
 final class UploadViewModel: NSObject,ObservableObject, UploadSDKErrorDelegate  {
+
+
+    @Published var uploadProgress: Double = 0
+    @Published var isUploading = false
+    @Published var uploadCompleted = false
+    @Published var uploadError: String?
+    @Published var sharedURL: String?
+    @Published var isProcessingVideo = false
+    @Published var isLoading = false
+    @Published var errorMessage: String?
+    
+    private let uploader = Uploads()
+    private let uploadService = UploadService()
+    private var didFetchPlaybackURL = false
+    
+    override init() {
+
+         super.init()
+
+         uploader.errorDelegate = self
+     }
+    
     func uploadSDKDidFail(
             with error: String
         ) {
@@ -19,35 +41,9 @@ final class UploadViewModel: NSObject,ObservableObject, UploadSDKErrorDelegate  
         }
     
 
-    @Published var uploadProgress: Double = 0
-    @Published var isUploading = false
-    @Published var uploadCompleted = false
-    @Published var uploadError: String?
-    @Published var sharedURL: String?
-    @Published var isProcessingVideo = false
-    
-    
-   
-    @Published var isLoading = false
-    @Published var errorMessage: String?
-    
-    private let uploader = Uploads()
-//    private let service = StreamGateServices()
-    private let uploadService = UploadService()
-    private var didFetchPlaybackURL = false
-    
-    override init() {
-
-         super.init()
-
-         uploader.errorDelegate = self
-     }
-    
-
     func uploadVideo(
         fileURL: URL
     ) async {
-        print("uploading the video")
         resetState()
 
         do {
@@ -55,20 +51,13 @@ final class UploadViewModel: NSObject,ObservableObject, UploadSDKErrorDelegate  
             isUploading = true
             uploadCompleted = false
 
-            // getting the url
-//            let response = try await service.sendUploadRequest()
-//            let signedUrl = try await uploadService.createDirectUpload()
+            // getting signed url and upload id from fastpix server
             guard let (signedUrl, uploadId) = try await uploadService.createDirectUpload() else {
                 return
             }
             
-//            print("response / signed url : \(signedUrl)")
-//            print("upload id : \(uploadId)")
-
-            
+            // watching the progress of the upload
             uploader.progressHandler = { [weak self] progress in
-                
-                print("progress -> \(progress)")
                 guard let self else { return }
 
                 Task { @MainActor in
@@ -82,22 +71,15 @@ final class UploadViewModel: NSObject,ObservableObject, UploadSDKErrorDelegate  
                         self.isUploading = false
                         self.uploadCompleted = true
                         self.isProcessingVideo = true
-                        print("upload id is : \(uploadId)")
-                        
-                        
-//                        do{
-//                            try await Task.sleep(nanoseconds: 5_000_000_000)
-                            
-                            await self.pollVideoStatus(
-                                uploadId: uploadId
-                            )
-                            
-//                        }
+        
+                        // getting the status
+                        await self.pollVideoStatus(
+                            uploadId: uploadId
+                        )
                     }
                 }
             }
 
-           print("uploading the file in sdk : \(fileURL)")
             // uploading file url to sdk
            uploader.uploadFile(
                 file: fileURL,
@@ -106,8 +88,6 @@ final class UploadViewModel: NSObject,ObservableObject, UploadSDKErrorDelegate  
             )
 
         } catch {
-            print("============ getting error =======")
-            print(error.localizedDescription)
             handleSystemError(error)
         }
     }
@@ -115,8 +95,6 @@ final class UploadViewModel: NSObject,ObservableObject, UploadSDKErrorDelegate  
     private func pollVideoStatus(
         uploadId: String
     ) async {
-
-        print("checking for video status for \(uploadId)")
 
         var attempts = 0
         let maxAttempts = 30
@@ -130,9 +108,6 @@ final class UploadViewModel: NSObject,ObservableObject, UploadSDKErrorDelegate  
                     uploadId: uploadId
                 ) {
 
-                print("upload id => \(uploadId)")
-                print("status => \(status)")
-
                 switch status.lowercased() {
 
                 case "ready":
@@ -143,7 +118,6 @@ final class UploadViewModel: NSObject,ObservableObject, UploadSDKErrorDelegate  
                         self.sharedURL =
                         "https://stream.fastpix.io/\(playbackId).m3u8"
 
-                        print("video ready")
                     }
 
                     return
@@ -156,7 +130,6 @@ final class UploadViewModel: NSObject,ObservableObject, UploadSDKErrorDelegate  
                     return
 
                 default:
-
                     print("video still processing...")
                 }
             }

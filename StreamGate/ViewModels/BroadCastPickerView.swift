@@ -30,12 +30,11 @@ struct BroadcastPickerView: UIViewRepresentable {
 extension BroadcastPickerView {
     static func trigger() {
         guard let picker = pickerView else {
-            print("❌ Trigger failed: picker is nil")
+         
             return
         }
         
         guard let button = picker.subviews.first(where: { $0 is UIButton }) as? UIButton else {
-            print("❌ Trigger failed: could not find UIButton inside picker")
             return
         }
         

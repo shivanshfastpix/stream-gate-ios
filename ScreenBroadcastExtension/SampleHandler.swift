@@ -31,17 +31,17 @@ class SampleHandler: RPBroadcastSampleHandler {
  
     override func broadcastStarted(withSetupInfo setupInfo: [String : NSObject]?) {
         
-        // ✅ Signal to main app that broadcast is active
+        // Signal to main app that broadcast is active
            UserDefaults(suiteName: Self.suiteName)?.set(true, forKey: "isBroadcasting")
         
         if let dir = Self.container() {
             try? FileManager.default.removeItem(at: dir.appendingPathComponent("LIFECYCLE.log"))
         }
         
-        // ✅ Clear any leftover files from previous recordings FIRST
+        // Clear any leftover files from previous recordings FIRST
         Self.clearOldRecordings()
 
-        // ✅ Also clear the stale UserDefaults signal so the main app
+        // Also clear the stale UserDefaults signal so the main app
         // doesn't navigate to a file that no longer exists
         UserDefaults(suiteName: Self.suiteName)?.removeObject(forKey: "recordedVideoURL")
 
@@ -153,7 +153,7 @@ class SampleHandler: RPBroadcastSampleHandler {
     override func broadcastFinished() {
         Self.writeStage("9_FINISHED_CALLED", "frames=\(frameCount) appended=\(appendedCount)")
         
-        // ✅ Signal to main app that broadcast stopped
+        // Signal to main app that broadcast stopped
            UserDefaults(suiteName: Self.suiteName)?.set(false, forKey: "isBroadcasting")
 
  

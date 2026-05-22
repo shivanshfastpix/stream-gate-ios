@@ -11,6 +11,9 @@ struct UploadView: View {
     @State private var player = AVPlayer()
     @State private var selectedVideoURL: URL?
     
+    let screenWidth = UIScreen.main.bounds.width
+    let screenHeight = UIScreen.main.bounds.height
+    
 
     var body: some View {
 
@@ -44,7 +47,7 @@ struct UploadView: View {
                             if selectedVideoURL != nil {
                                 
                                 VideoPlayer(player: player)
-                                    .frame(height: 300)
+                                    .frame(height:screenHeight * 0.35)
                                     .clipShape(
                                         RoundedRectangle(cornerRadius: 24)
                                     )
@@ -237,7 +240,6 @@ struct UploadView: View {
                             // Store Selected Video URL
                             
                             selectedVideoURL = movie.url
-//                            print("video url is  : \(movie.url)")
                             
                             // Create Player Item
                             
@@ -264,7 +266,7 @@ struct UploadView: View {
                         
                     } catch {
                         
-                        print(error.localizedDescription)
+                        // show the error
                     }
                 }
             }
@@ -273,3 +275,4 @@ struct UploadView: View {
         }
     }
 }
+

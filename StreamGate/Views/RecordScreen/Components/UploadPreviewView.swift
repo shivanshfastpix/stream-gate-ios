@@ -72,6 +72,8 @@ struct UploadPreviewView: View {
                         }
                     }
                     
+                    // Processing the video
+                    
                     if vm.isProcessingVideo {
 
                         VStack(spacing: 12) {

@@ -44,7 +44,3 @@ struct HeaderSection: View {
 
     }
 }
-
-#Preview {
-    HeaderSection()
-}

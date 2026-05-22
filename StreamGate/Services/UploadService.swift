@@ -1,12 +1,9 @@
 import Foundation
 
 private let apiKey: String = ProcessInfo.processInfo.environment["API_KEY"] ?? ""
-
 private let accessTokenID: String = ProcessInfo.processInfo.environment["ACCESS_TOKEN_ID"] ?? ""
 private let secretKey: String = ProcessInfo.processInfo.environment["SECRET_KEY"] ?? ""
 
-
-import Foundation
 
 final class UploadService {
     
@@ -17,7 +14,7 @@ final class UploadService {
     }
     
     func createDirectUpload() async throws -> (URL, String)? {
-        
+    
         let parameters: [String: Any] = [
                     "corsOrigin": "*",
         
@@ -63,21 +60,15 @@ final class UploadService {
                    let dataDic = jsonDictionary["data"] as? [String: Any],
                    let uploadId = dataDic["uploadId"] as? String,
                    let urlString = dataDic["url"] as? String,
-                   
                    let uploadUrl = URL(string: urlString) {
-//                    print("data from fastpix server : \(dataDic)")
-//                    print("upload id : \(uploadId)")
                     return (uploadUrl, uploadId)
                 } else {
-                    print("Failed to parse upload URL from response.")
                     return nil
                 }
             } catch {
-                print("Error decoding response: \(error.localizedDescription)")
                 return nil
             }
         } else {
-            print("---- getting error ---")
             let errorMessage = String(decoding: data, as: UTF8.self)
             throw CreateUploadError.custom("Upload POST failed: HTTP \(httpResponse.statusCode):\n\(errorMessage)")
         }
@@ -86,8 +77,6 @@ final class UploadService {
     func getResponse(
         uploadId: String
     ) async -> (String, String?)? {
-
-        print("entering getMediaStatus for upload id : \(uploadId)")
 
         let credentials = Data(
             "\(accessTokenID):\(secretKey)".utf8
@@ -120,14 +109,11 @@ final class UploadService {
                 return nil
             }
 
-            print("status code => \(httpResponse.statusCode)")
-
             // ignore temporary server errors
             guard (200...299).contains(
                 httpResponse.statusCode
             ) else {
 
-                print("video not ready yet")
                 return nil
             }
 
@@ -141,24 +127,18 @@ final class UploadService {
             let playbackId =
             decoded.data.playbackIds.first?.id
 
-            print("status => \(status)")
-            print("playbackId => \(playbackId ?? "")")
-
             return (status, playbackId)
 
         } catch {
-
-            print("temporary polling error: \(error)")
             return nil
         }
     }
     
 
-    /// Generates a full URL for a given endpoint in the FastPix Video public API
+    // Generates a full URL for a given endpoint in the FastPix Video public API
     private func fullURL(forEndpoint endpoint: String) throws -> URL {
         let fullPath = "https://api.fastpix.io/v1/on-demand/\(endpoint)"
         guard let url = URL(string: fullPath) else {
-           print("error on full url : bad endpoint \(endpoint)")
             throw CreateUploadError.custom("Bad endpoint: \(endpoint)")
         }
         return url
@@ -166,35 +146,4 @@ final class UploadService {
     
 }
 
-enum CreateUploadError: LocalizedError {
-    
-    case invalidResponse
-    case invalidUploadURL
-    case serializationFailed
-    case badEndpoint(String)
-    case serverError(statusCode: Int, message: String)
-    case custom(String)
-    
-    var errorDescription: String? {
-        switch self {
-            
-        case .invalidResponse:
-            return "Invalid HTTP response received from server."
-            
-        case .invalidUploadURL:
-            return "Failed to generate a valid upload URL."
-            
-        case .serializationFailed:
-            return "Failed to serialize request body."
-            
-        case .badEndpoint(let endpoint):
-            return "Invalid endpoint: \(endpoint)"
-            
-        case .serverError(let statusCode, let message):
-            return "Server error (\(statusCode)): \(message)"
-            
-        case .custom(let message):
-            return message
-        }
-    }
-}
+

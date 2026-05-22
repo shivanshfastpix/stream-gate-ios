@@ -2,8 +2,6 @@ import SwiftUI
 
 struct UploadDropZone: View {
 
-//    let onTap: () -> Void
-
     var body: some View {
 
         VStack(spacing: 24) {
@@ -43,20 +41,5 @@ struct UploadDropZone: View {
                 )
         }
         .contentShape(Rectangle())
-//        .onTapGesture {
-////            onTap()
-//        }
-    }
-}
-
-#Preview {
-
-    ZStack {
-
-        Color.black
-            .ignoresSafeArea()
-
-        UploadDropZone()
-        .padding()
     }
 }

@@ -8,11 +8,9 @@ struct RecordScreenSection: View {
     var body: some View {
         HStack(spacing: 14) {
 
-//            if !isRecording {
-                BroadcastPickerView()
-                    .frame(width: 44, height: 44)
-                    .allowsHitTesting(false)
-//            }
+            BroadcastPickerView()
+                .frame(width: 44, height: 44)
+                .allowsHitTesting(false)
 
             Text(isRecording ? "Stop Recording" : "Start Recording")
                 .foregroundColor(.white)
@@ -31,9 +29,9 @@ struct RecordScreenSection: View {
         .contentShape(Rectangle())
         .onTapGesture {
             onTap()
-//            if !isRecording {
-                BroadcastPickerView.trigger()
-//            }
+
+            BroadcastPickerView.trigger()
+
         }
     }
 }

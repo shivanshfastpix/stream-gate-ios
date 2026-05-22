@@ -1,7 +1,6 @@
 import SwiftUI
 
 struct RecordButton : View {
-//    let onTap:() -> Void
     var body: some View {
        
             HStack(spacing: 16) {

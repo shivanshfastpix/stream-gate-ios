@@ -7,6 +7,8 @@ struct CustomMovieFile: Transferable {
     let url: URL
 
     @available(iOS 16.0, *)
+    
+    
     static var transferRepresentation: some TransferRepresentation {
 
         FileRepresentation(
@@ -18,13 +20,11 @@ struct CustomMovieFile: Transferable {
         } importing: { received in
 
             let fileName = received.file.lastPathComponent
-            print("file name : \(fileName)")
 
             let destination = URL
                 .temporaryDirectory
                 .appendingPathComponent(fileName)
             
-            print("destination : \(destination)")
             // Will Remove the existing file
 
             if FileManager.default.fileExists(
@@ -37,7 +37,6 @@ struct CustomMovieFile: Transferable {
             }
 
             // copy the selected file
-
             try FileManager.default.copyItem(
                 at: received.file,
                 to: destination

@@ -35,10 +35,3 @@ struct RecordCameraSection: View {
         }
     }
 }
-
-#Preview {
-    
-    RecordCameraSection {
-        print("Camera tapped")
-    }
-}
