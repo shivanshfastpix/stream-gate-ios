@@ -6,7 +6,6 @@ private let accessTokenID: String = ProcessInfo.processInfo.environment["ACCESS_
 private let secretKey: String = ProcessInfo.processInfo.environment["SECRET_KEY"] ?? ""
 
 
-
 import Foundation
 
 final class UploadService {
@@ -84,41 +83,6 @@ final class UploadService {
         }
     }
     
-//    func getPlayBackId(videoId: String) async throws -> String {
-//
-//        let credentials = "\(accessTokenID):\(secretKey)"
-//
-//        guard let url = URL(
-//            string: "https://api.fastpix.io/v1/on-demand/uploads\(videoId)"
-//        ) else {
-//            throw URLError(.badURL)
-//        }
-//
-//        var request = URLRequest(url: url)
-//        request.httpMethod = "GET"
-//
-//        request.setValue(
-//            "Basic \(credentials)",
-//            forHTTPHeaderField: "Authorization"
-//        )
-//
-//        let (data, response) = try await URLSession.shared.data(for: request)
-//
-//        guard let httpResponse = response as? HTTPURLResponse,
-//              (200...299).contains(httpResponse.statusCode) else {
-//            throw URLError(.badServerResponse)
-//        }
-//        print("get request to get the signed url : \(data)")
-//
-//        let decoded = try JSONDecoder().decode(
-//            MediaResponse.self,
-//            from: data
-//        )
-//        print("decoded data for playback id : \(decoded)")
-//        print(decoded.data.playbackIds.first?.id ?? "")
-//        return decoded.data.playbackIds.first?.id ?? ""
-//    }
-    
     func getResponse(
         uploadId: String
     ) async -> (String, String?)? {
@@ -189,71 +153,6 @@ final class UploadService {
         }
     }
     
-    func getMediaStatus(
-        mediaId: String
-    ) async throws -> (String, String?) {
-
-        print("entering getMediaStatus")
-
-        let credentials = Data(
-            "\(accessTokenID):\(secretKey)".utf8
-        ).base64EncodedString()
-
-        guard let url = URL(
-            string: "https://api.fastpix.io/v1/on-demand/upload/\(mediaId)"
-        ) else {
-
-            throw URLError(.badURL)
-        }
-
-        var request = URLRequest(url: url)
-
-        request.httpMethod = "GET"
-
-        request.setValue(
-            "Basic \(credentials)",
-            forHTTPHeaderField: "Authorization"
-        )
-
-        let (data, response) =
-        try await URLSession.shared.data(for: request)
-
-        guard let httpResponse =
-                response as? HTTPURLResponse else {
-
-            throw URLError(.badServerResponse)
-        }
-
-        print("status code => \(httpResponse.statusCode)")
-
-        if let jsonString =
-            String(data: data, encoding: .utf8) {
-
-            print("response => \(jsonString)")
-        }
-
-        guard (200...299).contains(
-            httpResponse.statusCode
-        ) else {
-
-            throw URLError(.badServerResponse)
-        }
-
-        let decoded = try JSONDecoder().decode(
-            MediaResponse.self,
-            from: data
-        )
-
-        let status = decoded.data.status
-
-        let playbackId =
-        decoded.data.playbackIds.first?.id
-
-        print("status => \(status)")
-        print("playbackId => \(playbackId ?? "")")
-
-        return (status, playbackId)
-    }
 
     /// Generates a full URL for a given endpoint in the FastPix Video public API
     private func fullURL(forEndpoint endpoint: String) throws -> URL {
@@ -265,99 +164,6 @@ final class UploadService {
         return url
     }
     
-
-
-//    func createDirectUpload() async throws -> URL {
-//        
-//        let parameters: [String: Any] = [
-//            "corsOrigin": "*",
-//            
-//            "pushMediaSettings": [
-//                "accessPolicy": "public",
-//                "generateSubtitles": true,
-//                "normalizeAudio": true,
-//                "maxResolution": "1080p",
-////                "mediaQuality": "standard"
-//            ]
-//        ]
-//        
-//        let jsonData = try JSONSerialization.data(
-//            withJSONObject: parameters
-//        )
-//        
-//        // DEBUG
-//        if let jsonString = String(data: jsonData, encoding: .utf8) {
-//            print("REQUEST JSON:")
-//            print(jsonString)
-//        }
-//        
-//        guard let url = URL(
-//            string: "https://api.fastpix.com/v1/on-demand/upload"
-//        ) else {
-//            throw URLError(.badURL)
-//        }
-//        
-//        var request = URLRequest(url: url)
-//        
-//        request.httpMethod = "POST"
-//        request.httpBody = jsonData
-//        
-//        request.setValue(
-//            "application/json",
-//            forHTTPHeaderField: "Content-Type"
-//        )
-//        
-//        request.setValue(
-//            "application/json",
-//            forHTTPHeaderField: "Accept"
-//        )
-//        
-//        let credentials = "\(accessTokenID):\(secretKey)"
-//        
-//        let encodedCredentials = Data(credentials.utf8)
-//            .base64EncodedString()
-//        
-//        request.setValue(
-//            "Basic \(encodedCredentials)",
-//            forHTTPHeaderField: "Authorization"
-//        )
-//        
-//        let (data, response) = try await urlSession.data(for: request)
-//        
-//        guard let httpResponse = response as? HTTPURLResponse else {
-//            throw UploadServiceError.invalidResponse
-//        }
-//        
-//        print("STATUS CODE:", httpResponse.statusCode)
-//        
-//        if let responseString = String(data: data, encoding: .utf8) {
-//            print("RESPONSE:")
-//            print(responseString)
-//        }
-//        
-//        guard (200...299).contains(httpResponse.statusCode) else {
-//            
-//            let serverMessage = String(
-//                data: data,
-//                encoding: .utf8
-//            ) ?? "Unknown error"
-//            
-//            throw UploadServiceError.serverError(
-//                statusCode: httpResponse.statusCode,
-//                message: serverMessage
-//            )
-//        }
-//        
-//        let decoded = try JSONDecoder()
-//            .decode(CreateDirectUploadResponse.self, from: data)
-//        
-//        guard let uploadURL = URL(string: decoded.data.url) else {
-//            throw UploadServiceError.invalidResponse
-//        }
-//        print(uploadURL)
-//        return uploadURL
-////        return decoded.data.url
-//    }
 }
 
 enum CreateUploadError: LocalizedError {
