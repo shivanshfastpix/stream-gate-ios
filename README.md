@@ -185,28 +185,6 @@ Add the following permissions to the main application's `Info.plist`:
 
 ---
 
-## Screen Recording Flow
-
-```
-User starts screen recording
-        ↓
-ReplayKit Broadcast Extension captures screen
-        ↓
-AVAssetWriter generates MP4 file
-        ↓
-Recording file path shared with main app via App Group
-        ↓
-Main app detects completed recording
-        ↓
-Video preview displayed
-        ↓
-FastPix Upload SDK uploads video
-        ↓
-Playback URL generated
-```
-
----
-
 ## Important Reference Links
 
 * FastPix Platform: [fastpix.io](https://fastpix.io/)
