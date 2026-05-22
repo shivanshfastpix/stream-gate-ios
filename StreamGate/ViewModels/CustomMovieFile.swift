@@ -7,8 +7,6 @@ struct CustomMovieFile: Transferable {
     let url: URL
 
     @available(iOS 16.0, *)
-    
-    
     static var transferRepresentation: some TransferRepresentation {
 
         FileRepresentation(

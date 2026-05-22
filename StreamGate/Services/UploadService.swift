@@ -4,7 +4,6 @@ private let apiKey: String = ProcessInfo.processInfo.environment["API_KEY"] ?? "
 private let accessTokenID: String = ProcessInfo.processInfo.environment["ACCESS_TOKEN_ID"] ?? ""
 private let secretKey: String = ProcessInfo.processInfo.environment["SECRET_KEY"] ?? ""
 
-
 final class UploadService {
     
     private let urlSession: URLSession
@@ -17,17 +16,14 @@ final class UploadService {
     
         let parameters: [String: Any] = [
                     "corsOrigin": "*",
-        
                     "pushMediaSettings": [
                         "accessPolicy": "public",
                         "generateSubtitles": true,
                         "normalizeAudio": true,
                         "maxResolution": "1080p",
-        //                "mediaQuality": "standard"
                     ]
                 ]
                 
-        
         guard let jsonData = try? JSONSerialization.data(withJSONObject: parameters) else {
             throw NSError(domain: "com.example.app", code: 500, userInfo: [
                 NSLocalizedDescriptionKey: "Failed to serialize parameters"
@@ -74,7 +70,7 @@ final class UploadService {
         }
     }
     
-    func getResponse(
+    func getStatus(
         uploadId: String
     ) async -> (String, String?)? {
 
@@ -85,7 +81,6 @@ final class UploadService {
         guard let url = URL(
             string: "https://api.fastpix.io/v1/on-demand/\(uploadId)"
         ) else {
-
             return nil
         }
 
@@ -109,7 +104,6 @@ final class UploadService {
                 return nil
             }
 
-            // ignore temporary server errors
             guard (200...299).contains(
                 httpResponse.statusCode
             ) else {
@@ -134,7 +128,6 @@ final class UploadService {
         }
     }
     
-
     // Generates a full URL for a given endpoint in the FastPix Video public API
     private func fullURL(forEndpoint endpoint: String) throws -> URL {
         let fullPath = "https://api.fastpix.io/v1/on-demand/\(endpoint)"
@@ -145,5 +138,3 @@ final class UploadService {
     }
     
 }
-
-

@@ -1,7 +1,7 @@
-
 struct PlaybackId: Codable {
     let id: String
 }
+
 struct MediaResponse: Codable {
 
     let data: MediaData

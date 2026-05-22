@@ -23,14 +23,12 @@ struct UploadPreviewView: View {
                                Color.black.ignoresSafeArea()
 
                                VStack {
-//                                   Text("Upload Screen")
                                }
                            }
                            .navigationTitle("Upload Video")
                            .navigationBarTitleDisplayMode(.inline)
                     
                     // Video Player
-                    
                     VideoPlayer(player: player)
                         .frame(height: 300)
                         .clipShape(
@@ -38,8 +36,6 @@ struct UploadPreviewView: View {
                         )
                     
                     // Upload Progress
-                
-                    
                     if vm.isUploading {
                         
                         VStack(spacing: 12) {
@@ -60,7 +56,6 @@ struct UploadPreviewView: View {
                     
                     
                     // Upload Success
-                    
                     if vm.uploadCompleted {
                         
                         if #available(iOS 16.0, *) {
@@ -73,7 +68,6 @@ struct UploadPreviewView: View {
                     }
                     
                     // Processing the video
-                    
                     if vm.isProcessingVideo {
 
                         VStack(spacing: 12) {
@@ -87,7 +81,6 @@ struct UploadPreviewView: View {
                     }
                     
                     // Shared URL
-
                     if let sharedURL = vm.sharedURL {
 
                         VStack(spacing: 20) {
@@ -110,7 +103,6 @@ struct UploadPreviewView: View {
                             HStack(spacing: 16) {
 
                                 // Copy Link Button
-
                                 Button {
 
                                     UIPasteboard.general.string = sharedURL
@@ -140,7 +132,6 @@ struct UploadPreviewView: View {
                                 }
 
                                 // Preview Button
-
                                 Button {
 
                                     if let url = URL(string: sharedURL) {
@@ -188,7 +179,6 @@ struct UploadPreviewView: View {
                     }
                     
                     // Error
-                    
                     if let error = vm.uploadError {
                         
                         Text(error)
@@ -201,7 +191,6 @@ struct UploadPreviewView: View {
         .task {
             
             // Setup Player
-            
             let playerItem = AVPlayerItem(
                 url: videoURL
             )
@@ -211,9 +200,8 @@ struct UploadPreviewView: View {
             )
             
             player.play()
-            
+
             // Upload
-            
             await vm.uploadVideo(
                 fileURL: videoURL
             )

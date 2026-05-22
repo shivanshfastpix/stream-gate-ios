@@ -198,7 +198,6 @@ private extension RecordView {
         }
 
         // Camera Permission
-
         if cameraStatus == .notDetermined {
 
             let result =
@@ -219,7 +218,6 @@ private extension RecordView {
         }
 
         // Microphone Permission
-
         if micStatus == .notDetermined {
 
             let result =
@@ -250,7 +248,6 @@ private extension RecordView {
             )
 
         // Already Denied
-
         if micStatus == .denied {
 
              showPermissionDenied(
@@ -263,7 +260,6 @@ private extension RecordView {
         }
 
         // Request Permission
-
         if micStatus == .notDetermined {
 
             let result =
@@ -341,7 +337,6 @@ private extension RecordView {
         }
 
         // Validate asset
-
         let asset = AVURLAsset(url: fileURL)
 
         do {
@@ -354,12 +349,6 @@ private extension RecordView {
             }
 
         } catch {
-
-//            print(
-//                "Failed to validate asset:",
-//                error.localizedDescription
-//            )
-
             return
         }
 

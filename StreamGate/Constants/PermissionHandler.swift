@@ -10,7 +10,7 @@ final class PermissionManager {
     private init() {}
 
     // MARK: - Public API
-
+    
     func status(for permission: PermissionType)
     -> PermissionStatus {
 
@@ -172,5 +172,3 @@ private extension PermissionManager {
         }
     }
 }
-
-

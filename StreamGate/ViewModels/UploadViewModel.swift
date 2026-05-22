@@ -40,7 +40,6 @@ final class UploadViewModel: NSObject,ObservableObject, UploadSDKErrorDelegate  
             }
         }
     
-
     func uploadVideo(
         fileURL: URL
     ) async {
@@ -104,7 +103,7 @@ final class UploadViewModel: NSObject,ObservableObject, UploadSDKErrorDelegate  
             attempts += 1
 
             if let (status, playbackId) =
-                await self.uploadService.getResponse(
+                await self.uploadService.getStatus(
                     uploadId: uploadId
                 ) {
 
@@ -144,7 +143,6 @@ final class UploadViewModel: NSObject,ObservableObject, UploadSDKErrorDelegate  
         "Video processing timeout"
     }
     
-    
     private func handleSystemError(
             _ error: Error
         ) {
@@ -181,7 +179,7 @@ final class UploadViewModel: NSObject,ObservableObject, UploadSDKErrorDelegate  
         }
 
         // MARK: - SDK Error Mapping
-
+    
         private func mapSDKError(
             _ error: String
         ) -> String {

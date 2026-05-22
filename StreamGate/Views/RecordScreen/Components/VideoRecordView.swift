@@ -63,7 +63,6 @@ struct VideoRecorderView: UIViewControllerRepresentable {
         }
         
         picker.sourceType = .camera
-//        picker.cameraCaptureMode = .video
         picker.mediaTypes = ["public.movie"]
         picker.videoQuality = .typeMedium
         picker.videoMaximumDuration = 60

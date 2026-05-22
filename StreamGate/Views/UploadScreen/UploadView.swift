@@ -116,7 +116,6 @@ struct UploadView: View {
                                     HStack(spacing: 16) {
 
                                         // Copy Button
-
                                         Button {
 
                                             UIPasteboard.general.string = sharedURL
@@ -146,7 +145,6 @@ struct UploadView: View {
                                         }
 
                                         // Preview Button
-
                                         Button {
 
                                             if let url = URL(string: sharedURL) {
@@ -238,35 +236,30 @@ struct UploadView: View {
                         ) {
                             
                             // Store Selected Video URL
-                            
                             selectedVideoURL = movie.url
                             
                             // Create Player Item
-                            
                             let playerItem = AVPlayerItem(
                                 url: movie.url
                             )
                             
                             // Load Into Video Player
-                            
                             player.replaceCurrentItem(
                                 with: playerItem
                             )
                             
                             // Auto Play
-                            
                             player.play()
                             
                             // Start Upload
-                            
                             await vm.uploadVideo(
                                 fileURL: movie.url
                             )
                         }
                         
                     } catch {
-                        
                         // show the error
+                        
                     }
                 }
             }
@@ -275,4 +268,3 @@ struct UploadView: View {
         }
     }
 }
-

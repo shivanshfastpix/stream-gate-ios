@@ -45,7 +45,6 @@ class SampleHandler: RPBroadcastSampleHandler {
         // doesn't navigate to a file that no longer exists
         UserDefaults(suiteName: Self.suiteName)?.removeObject(forKey: "recordedVideoURL")
 
-        
         Self.writeStage("1_STARTED")
  
         let name = "\(UUID().uuidString).mp4"
