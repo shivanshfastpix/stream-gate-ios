@@ -26,7 +26,7 @@ StreamGate is built using a modern iOS tech stack (100% Swift, SwiftUI, ReplayKi
 * **Video Encoding**: AVFoundation (`AVAssetWriter`, H.264)
 * **Inter-process Communication**: App Groups (shared `UserDefaults` + shared filesystem)
 * **Uploading**: FastPix iOS Upload SDK (resumable chunked uploads)
-* **Build Constraints**: `iOS 16.0+`, Xcode 15+, real device required
+* **Build Constraints**: `iOS 26.0+`, Xcode 15+, real device required
 
 ---
 
@@ -39,19 +39,54 @@ Because StreamGate requires a FastPix API key to initialize uploads, and uses an
 You will need:
 * A **FastPix Account** (to retrieve your API Token ID and Secret Key).
 * **Xcode 15** or later.
+* iOS 26.0+
 * A **real iOS device** — ReplayKit Broadcast Extensions do not work reliably on Simulator.
 
-### 2. Configure App Groups
+### 2. Broadcast Extension Configuration
 
-Both targets must share the same App Group identifier. In Xcode:
+The project contains two targets — **StreamGate** (main app) and **ScreenBroadcastExtension** — which must be configured correctly for screen recording to work.
 
-1. Select the **StreamGate** target → Signing & Capabilities → **+ App Groups**
-   Add: `group.com.streamgate.broadcast`
+#### 2a. Main App Target — General
 
-2. Select the **ScreenBroadcastExtension** target → Signing & Capabilities → **+ App Groups**
-   Add: `group.com.streamgate.broadcast`
+* **Bundle Identifier**: `com.streamgate.StreamGate`
+* **Minimum Deployments**: iOS 26.0
+* **Frameworks, Libraries, and Embedded Content**:
+  * `fp-swift-upload-sdk` — the FastPix upload SDK
+  * `ScreenBroadcastExtension.appex` — embedded with **Embed Without Signing**
 
-> If the identifiers do not match exactly, the extension and main app write and read from different sandboxed directories, and no recorded file will ever be detected by the main app.
+  > The extension `.appex` must be listed here so iOS bundles it inside the main app at install time. Without this, the broadcast picker will show no available extension.
+
+#### 2b. Extension Target — Signing & Capabilities
+
+* **Bundle Identifier**: `com.streamgate.StreamGate.ScreenBroadcastExtension`
+* **Signing**: Automatically managed — select your Apple Developer team
+* **App Groups**: `group.com.streamgate.broadcast` ✅ (must be checked)
+
+  > The same App Group identifier must also be enabled on the **StreamGate** main target under its own Signing & Capabilities tab. If the identifiers do not match exactly on both targets, the extension and main app will write and read from different sandboxed directories and no recorded file will ever be detected.
+
+#### 2c. Project File Structure
+
+```
+StreamGate/
+├── StreamGate/                        # Main app target
+│   ├── Constants/
+│   ├── Models/
+│   ├── Services/
+│   ├── ViewModels/
+│   └── Views/
+│       ├── RecordScreen/              # Screen + camera recording UI
+│       └── UploadScreen/
+│           └── Components/
+│               ├── HeaderSection
+│               ├── RecordButton
+│               ├── SeparatorSection
+│               └── UploadDropZone
+│
+└── ScreenBroadcastExtension/          # Broadcast extension target
+    ├── SampleHandler.swift
+    ├── Info.plist
+    └── ScreenBroadcastExtension.entitlements
+```
 
 ### 3. Add your FastPix credentials
 
